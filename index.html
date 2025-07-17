@@ -5,6 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hier startet etwas Großes...</title>
   <style>
+    /* Smooth fade-in Animation */
+.fade-in {
+  opacity: 0;
+  transform: scale(0.95);
+  filter: drop-shadow(0 0 6px #00ff66);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 0 12px #39ff14);
+}
+
+/* Darkmode Light Theme */
+body.lightmode {
+  background: #e6ffe6;
+  color: #004400;
+}
+
+body.lightmode #countdown {
+  color: #007700;
+}
+
+body.lightmode #chatbot-container {
+  background: #ccffcc;
+  color: #004400;
+  box-shadow: 0 0 15px rgba(0,150,0,0.5);
+}
+
+body.lightmode #chatbot-header {
+  background: #009900;
+  color: #e6ffe6;
+}
+
+body.lightmode .user-msg {
+  background-color: #007700;
+  color: #cce6cc;
+}
+
+body.lightmode .gerd-msg {
+  background-color: #33aa33;
+  color: #e6ffe6;
+}
+
+body.lightmode #input-area {
+  background: #99cc99;
+}
+
+body.lightmode #userInput {
+  background: #ccffcc;
+  color: #004400;
+}
+
+body.lightmode #sendBtn {
+  background: #006600;
+  color: #ccffcc;
+}
+
+body.lightmode #sendBtn:hover {
+  background: #009900;
+  color: #e6ffe6;
+}
+
+/* Darkmode Toggle Button */
+#toggleDarkmode {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: #39ff14;
+  color: #121212;
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 8px #39ff14;
+  transition: background-color 0.3s;
+  z-index: 100;
+}
+#toggleDarkmode:hover {
+  background: #00cc00;
+}
+
     body {
       margin: 0; 
       background: #121212;
@@ -130,6 +214,7 @@
   </style>
 </head>
 <body>
+<button id="toggleDarkmode" aria-pressed="false" aria-label="Wechsel zwischen Dunkel- und Hellmodus">Light Mode</button>
 
   <h1>Hier startet etwas Großes…</h1>
   <div id="countdown" aria-live="polite" role="timer">Lade Countdown...</div>
@@ -326,6 +411,74 @@
     });
 
     addMessage('Hallo, ich bin Gerd, dein Math-Chatbot! Schreib mir eine Aufgabe oder Gleichung.', 'gerd');
+    // Darkmode Toggle
+const toggleBtn = document.getElementById('toggleDarkmode');
+toggleBtn.addEventListener('click', () => {
+  document.body.classList.toggle('lightmode');
+  const isLight = document.body.classList.contains('lightmode');
+  toggleBtn.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+  toggleBtn.setAttribute('aria-pressed', isLight);
+});
+
+// Smooth fade-in on scroll
+const fadeElements = document.querySelectorAll('.fade-in');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.3 });
+
+fadeElements.forEach(el => observer.observe(el));
+
+// Für den animierten Countdown:
+const countdownEl = document.getElementById('countdown');
+
+function animateCountdownText(text) {
+  countdownEl.innerHTML = '';
+  for (const char of text) {
+    const span = document.createElement('span');
+    span.textContent = char;
+    span.style.display = 'inline-block';
+    span.style.transition = 'color 0.6s ease';
+    countdownEl.appendChild(span);
+  }
+  let i = 0;
+  setInterval(() => {
+    const spans = countdownEl.querySelectorAll('span');
+    spans.forEach((span, idx) => {
+      span.style.color = '#00ff99';
+      span.style.textShadow = '0 0 10px #00ff99';
+    });
+    spans[i].style.color = '#39ff14';
+    spans[i].style.textShadow = '0 0 20px #39ff14, 0 0 30px #00ff00';
+    i = (i + 1) % spans.length;
+  }, 350);
+}
+
+// Aktualisiere updateCountdown-Funktion anpassen:
+function updateCountdown() {
+  const now = new Date();
+  // Launch: 11. August 2025, 00:00 MEZ (Sommerzeit)
+  const launch = new Date(Date.UTC(2025,7,10,22,0,0)); // 10.Aug 22:00 UTC = 11.Aug 0:00 MEZ(MESZ)
+  const diff = launch - now;
+
+  if(diff <= 0){
+    animateCountdownText("🚀 Es ist Zeit! Launch ist jetzt!");
+    clearInterval(countdownInterval);
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  const text = `Launch in ${days} Tagen, ${hours} Stunden, ${minutes} Minuten und ${seconds} Sekunden`;
+  animateCountdownText(text);
+}
+
   </script>
 </body>
 </html>
