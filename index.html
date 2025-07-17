@@ -162,5 +162,75 @@
       if (e.key === 'Enter') sendBtn.click();
     });
   </script>
+  <section id="countdown" class="hidden" style="margin-top: 100px; text-align: center; color: white;">
+  <h2>Countdown bis zum Launch</h2>
+  <div id="countdown-timer" style="font-size: 2rem; font-weight: bold; margin-top: 15px;"></div>
+</section>
+
+<script>
+  // Scroll Animation (weiterverwenden, falls schon im Code)
+  function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return rect.top < window.innerHeight && rect.bottom > 0;
+  }
+
+  function scrollAnimation() {
+    document.querySelectorAll('.hidden').forEach(el => {
+      if (isInViewport(el)) {
+        el.classList.add('show');
+        el.classList.remove('hidden');
+      }
+    });
+  }
+  window.addEventListener('scroll', scrollAnimation);
+  window.addEventListener('load', scrollAnimation);
+
+  // Countdown Funktion
+  function startCountdown() {
+    // Zielzeit 11. August 2025, 00:00 MESZ (UTC+2)
+    // MESZ ist UTC+2 → UTC Zeit minus 2 Stunden = Zielzeit UTC
+    // 11 Aug 2025 00:00 MESZ = 10 Aug 2025 22:00 UTC
+    const launchDateUTC = new Date(Date.UTC(2025, 7, 10, 22, 0, 0)); // Monate 0-basiert: 7=August
+
+    const timerEl = document.getElementById('countdown-timer');
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = launchDateUTC - now;
+
+      if (diff <= 0) {
+        timerEl.textContent = '🚀 Der Launch ist gestartet! 🎉';
+        clearInterval(intervalId);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      timerEl.textContent = `${days} Tage ${hours} Stunden ${minutes} Minuten ${seconds} Sekunden`;
+    }
+
+    updateTimer();
+    const intervalId = setInterval(updateTimer, 1000);
+  }
+
+  startCountdown();
+</script>
+
+<style>
+  /* Wiederholung der Animationen für den Countdown, falls nötig */
+  .hidden {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
 </body>
 </html>
