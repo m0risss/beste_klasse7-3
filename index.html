@@ -1,484 +1,288 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hier startet etwas Großes...</title>
-  <style>
-    /* Smooth fade-in Animation */
-.fade-in {
-  opacity: 0;
-  transform: scale(0.95);
-  filter: drop-shadow(0 0 6px #00ff66);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.fade-in.visible {
-  opacity: 1;
-  transform: scale(1);
-  filter: drop-shadow(0 0 12px #39ff14);
-}
-
-/* Darkmode Light Theme */
-body.lightmode {
-  background: #e6ffe6;
-  color: #004400;
-}
-
-body.lightmode #countdown {
-  color: #007700;
-}
-
-body.lightmode #chatbot-container {
-  background: #ccffcc;
-  color: #004400;
-  box-shadow: 0 0 15px rgba(0,150,0,0.5);
-}
-
-body.lightmode #chatbot-header {
-  background: #009900;
-  color: #e6ffe6;
-}
-
-body.lightmode .user-msg {
-  background-color: #007700;
-  color: #cce6cc;
-}
-
-body.lightmode .gerd-msg {
-  background-color: #33aa33;
-  color: #e6ffe6;
-}
-
-body.lightmode #input-area {
-  background: #99cc99;
-}
-
-body.lightmode #userInput {
-  background: #ccffcc;
-  color: #004400;
-}
-
-body.lightmode #sendBtn {
-  background: #006600;
-  color: #ccffcc;
-}
-
-body.lightmode #sendBtn:hover {
-  background: #009900;
-  color: #e6ffe6;
-}
-
-/* Darkmode Toggle Button */
-#toggleDarkmode {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background: #39ff14;
-  color: #121212;
-  border: none;
-  border-radius: 20px;
-  padding: 0.4rem 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 8px #39ff14;
-  transition: background-color 0.3s;
-  z-index: 100;
-}
-#toggleDarkmode:hover {
-  background: #00cc00;
-}
-
-    body {
-      margin: 0; 
-      background: #121212;
-      color: #eee;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      user-select:none;
-      color: #39ff14;
-      text-align: center;
-    }
-    #countdown {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-      color: #00ff99;
-      user-select:none;
-      text-align: center;
-    }
-
-    /* Chatbot Styles */
-    #chatbot-container {
-      display: flex; 
-      flex-direction: column; 
-      height: 70vh; 
-      max-width: 600px; 
-      width: 100%;
-      background:#1b1b1b; 
-      border-radius: 10px; 
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(0,255,0,0.5);
-    }
-
-    #chatbot-header {
-      background:#006400; 
-      color:#fff; 
-      padding:1rem; 
-      font-weight:bold; 
-      font-size:1.5rem; 
-      text-align:center;
-      user-select:none;
-    }
-
-    #chat {
-      flex-grow:1; 
-      overflow-y:auto; 
-      padding:1rem; 
-      color:#eee;
-      display: flex;
-      flex-direction: column;
-    }
-
-    #chat div {
-      max-width: 75%;
-      margin-bottom: 1rem;
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
-      line-height: 1.4;
-      word-wrap: break-word;
-    }
-
-    .user-msg {
-      background-color: #0b63c9;
-      color: white;
-      align-self: flex-end;
-    }
-
-    .gerd-msg {
-      background-color: #228b22;
-      color: white;
-      font-weight: bold;
-      align-self: flex-start;
-    }
-
-    #input-area {
-      display:flex; 
-      padding: 1rem; 
-      background:#333;
-    }
-
-    #userInput {
-      flex-grow:1; 
-      padding:0.5rem 1rem; 
-      font-size:1rem; 
-      border:none; 
-      border-radius:25px; 
-      outline:none;
-      color: #eee;
-      background: #222;
-    }
-
-    #sendBtn {
-      background:#228b22; 
-      color:#fff; 
-      border:none; 
-      border-radius:25px; 
-      padding:0 1.2rem; 
-      margin-left:0.5rem; 
-      font-weight:bold; 
-      cursor:pointer; 
-      transition:background-color 0.3s;
-    }
-
-    #sendBtn:hover {
-      background: #39ff14;
-      color: #000;
-    }
-
-    @media (max-width: 640px) {
-      h1 {
-        font-size: 2rem;
-      }
-      #chatbot-container {
-        height: 60vh;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hier startet etwas Großes…</title>
+<style>
+  /* Grunddesign Schwarz-Grün */
+  body {
+    background-color: #121212;
+    color: #00ff66;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 1rem;
+    min-height: 100vh;
+    transition: background-color 0.5s, color 0.5s;
+  }
+  h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  /* Fade-in Animation */
+  .fade-in {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 6px #00ff66);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 12px #39ff14);
+  }
+  /* Countdown Style */
+  #countdown {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #00ff66;
+  }
+  /* Darkmode Light Theme */
+  body.lightmode {
+    background: #e6ffe6;
+    color: #004400;
+  }
+  body.lightmode #countdown {
+    color: #007700;
+  }
+  /* Darkmode Toggle Button */
+  #toggleDarkmode {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: #39ff14;
+    color: #121212;
+    border: none;
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 8px #39ff14;
+    transition: background-color 0.3s;
+    z-index: 100;
+  }
+  #toggleDarkmode:hover {
+    background: #00cc00;
+  }
+  /* Chatbot Container */
+  #chatbot-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #121212;
+    border: 2px solid #00ff66;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00ff66;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+  }
+  #chatbot-header {
+    background-color: #00ff66;
+    color: #121212;
+    padding: 1rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+  }
+  #chatbot-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: #0a0a0a;
+    color: #00ff66;
+    font-size: 1rem;
+  }
+  .user-msg, .gerd-msg {
+    margin-bottom: 0.8rem;
+    padding: 0.6rem 1rem;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  .user-msg {
+    background-color: #005500;
+    color: #b3ffb3;
+    align-self: flex-end;
+  }
+  .gerd-msg {
+    background-color: #00cc33;
+    color: #121212;
+    align-self: flex-start;
+  }
+  #input-area {
+    display: flex;
+    padding: 0.5rem;
+    border-top: 2px solid #00ff66;
+    background-color: #121212;
+  }
+  #userInput {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 20px;
+    background-color: #004400;
+    color: #b3ffb3;
+    outline: none;
+  }
+  #sendBtn {
+    margin-left: 0.5rem;
+    padding: 0 1rem;
+    background-color: #00ff66;
+    border: none;
+    border-radius: 20px;
+    color: #121212;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #sendBtn:hover {
+    background-color: #39ff14;
+  }
+</style>
 </head>
 <body>
+
 <button id="toggleDarkmode" aria-pressed="false" aria-label="Wechsel zwischen Dunkel- und Hellmodus">Light Mode</button>
 
-  <h1>Hier startet etwas Großes…</h1>
-  <div id="countdown" aria-live="polite" role="timer">Lade Countdown...</div>
+<h1 class="fade-in">Hier startet etwas Großes…</h1>
 
-  <div id="chatbot-container" role="region" aria-label="Math Chatbot Gerd">
-    <header id="chatbot-header">Math-Chatbot Gerd 🤖</header>
-    <div id="chat" role="log" aria-live="polite" aria-relevant="additions"></div>
-    <div id="input-area">
-      <input id="userInput" type="text" placeholder="Schreib deine Mathe-Aufgabe..." aria-label="Matheaufgabe eingeben" autocomplete="off" />
-      <button id="sendBtn" aria-label="Senden">Los</button>
-    </div>
+<div id="countdown" class="fade-in" aria-live="polite" role="timer">Lade Countdown...</div>
+
+<div id="chatbot-container" class="fade-in" role="region" aria-label="Math Chatbot Gerd">
+  <div id="chatbot-header">Math Chatbot Gerd</div>
+  <div id="chatbot-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+  <div id="input-area">
+    <input type="text" id="userInput" placeholder="Schreib deine Mathe-Aufgabe..." aria-label="Eingabefeld für Mathe-Aufgaben" />
+    <button id="sendBtn" aria-label="Absenden">Senden</button>
   </div>
+</div>
 
-  <script>
-    // Countdown Timer
-    function updateCountdown() {
-      const countdownEl = document.getElementById('countdown');
-      const now = new Date();
-      // Launch: 11. August 2025, 00:00 MEZ (UTC+1 im Winter, UTC+2 im Sommer)
-      // Um MEZ exakt zu treffen, rechnen wir mit "Europe/Berlin" Zeitverschiebung:
-      // Einfachheitshalber: UTC+2 im Sommer, da August -> UTC+2
-      const launch = new Date(Date.UTC(2025,7,10,22,0,0)); 
-      // 11.8.2025 00:00 MEZ = 10.8.2025 23:00 UTC oder 22:00 UTC (wenn MESZ)
-      // August ist Sommerzeit (MESZ = UTC+2), also 00:00 MEZ = 22:00 UTC am 10.8.
-      // Daher launch auf 10.8. 22:00 UTC setzen
-      const diff = launch - now;
-
-      if(diff <= 0){
-        countdownEl.textContent = "🚀 Es ist Zeit! Launch ist jetzt!";
-        clearInterval(countdownInterval);
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      countdownEl.textContent = `Launch in ${days} Tagen, ${hours} Stunden, ${minutes} Minuten und ${seconds} Sekunden`;
-    }
-
-    const countdownInterval = setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-
-    // Math Chatbot "Gerd"
-    const chat = document.getElementById('chat');
-    const input = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-
-    function addMessage(text, sender) {
-      const msg = document.createElement('div');
-      msg.textContent = text;
-      if(sender === 'user') {
-        msg.classList.add('user-msg');
-        msg.setAttribute('aria-label', 'Benutzer Nachricht');
-      } else {
-        msg.classList.add('gerd-msg');
-        msg.setAttribute('aria-label', 'Antwort von Gerd');
-      }
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    class MathGerd {
-      constructor() {
-        this.variables = {};
-      }
-
-      async handleInput(text) {
-        text = text.toLowerCase().trim();
-        if(!text) return "Bitte gib eine Aufgabe ein.";
-
-        const simpleCalc = this.trySimpleCalculation(text);
-        if(simpleCalc !== null) return simpleCalc;
-
-        const eqSolution = this.trySolveEquation(text);
-        if(eqSolution !== null) return eqSolution;
-
-        const wordProblem = this.trySolveWordProblem(text);
-        if(wordProblem !== null) return wordProblem;
-
-        return "Sorry, das habe ich leider nicht verstanden. Probiere einfache Rechnungen oder lineare Gleichungen.";
-      }
-
-      trySimpleCalculation(text) {
-        let expr = text
-          .replace(/plus/g, '+')
-          .replace(/minus/g, '-')
-          .replace(/mal/g, '*')
-          .replace(/×/g, '*')
-          .replace(/geteilt durch|durch/g, '/')
-          .replace(/ /g, '');
-
-        if(!/^[0-9+\-*/().]+$/.test(expr)) return null;
-
-        try {
-          const result = eval(expr);
-          if(typeof result === 'number' && isFinite(result)) {
-            return `Das Ergebnis von ${text} ist ${result}.`;
-          }
-        } catch(e) {
-          return null;
-        }
-        return null;
-      }
-
-      trySolveEquation(text) {
-        if(!text.includes('=') || !text.includes('x')) return null;
-
-        let clean = text.replace(/[^0-9xX=+\-*/.()]/g, '').toLowerCase();
-
-        try {
-          let parts = clean.split('=');
-          if(parts.length !== 2) return null;
-
-          let left = parts[0].replace(/\*/g, '');
-          let right = parts[1];
-
-          left = left.replace(/-/g, '+-');
-          let leftParts = left.split('+').filter(s => s !== '');
-
-          let a = 0;
-          let b = 0;
-
-          leftParts.forEach(term => {
-            if(term.includes('x')) {
-              let coeff = term.replace('x', '');
-              if(coeff === '' || coeff === '+') coeff = 1;
-              else if(coeff === '-') coeff = -1;
-              else coeff = parseFloat(coeff);
-              a += coeff;
-            } else {
-              b += parseFloat(term);
-            }
-          });
-
-          let c = parseFloat(right);
-
-          if(isNaN(a) || isNaN(b) || isNaN(c)) return null;
-          if(a === 0) return "Diese Gleichung kann ich nicht lösen (a=0).";
-
-          let x = (c - b) / a;
-          return `Die Lösung der Gleichung ${text} ist: x = ${x.toFixed(4)}.`;
-        } catch(e) {
-          return null;
-        }
-      }
-
-      trySolveWordProblem(text) {
-        if(/ich habe (\d+) (apfel|äpfel|birne|birnen|banane|bananen)/.test(text) && /verschenke (\d+)/.test(text)) {
-          let start = parseInt(text.match(/ich habe (\d+)/)[1]);
-          let giveAway = parseInt(text.match(/verschenke (\d+)/)[1]);
-          let left = start - giveAway;
-          if(left < 0) left = 0;
-          return `Wenn du ${start} Äpfel hast und ${giveAway} verschenkst, bleiben ${left} übrig.`;
-        }
-        if(/wie viele bleiben übrig/.test(text) && /(\d+) (kekse|bonbons|chips|gummibärchen)/.test(text) && /verschenke (\d+)/.test(text)) {
-          let total = parseInt(text.match(/(\d+) (kekse|bonbons|chips|gummibärchen)/)[1]);
-          let give = parseInt(text.match(/verschenke (\d+)/)[1]);
-          let result = total - give;
-          if(result < 0) result = 0;
-          return `Von ${total} bleiben nach Verschenken von ${give} noch ${result} übrig.`;
-        }
-        return null;
-      }
-    }
-
-    const gerd = new MathGerd();
-
-    function userSend() {
-      const text = input.value.trim();
-      if(!text) return;
-
-      addMessage(text, 'user');
-      input.value = '';
-      input.disabled = true;
-      sendBtn.disabled = true;
-
-      setTimeout(async () => {
-        let response = await gerd.handleInput(text);
-        addMessage(response, 'gerd');
-        input.disabled = false;
-        sendBtn.disabled = false;
-        input.focus();
-      }, 600);
-    }
-
-    sendBtn.addEventListener('click', userSend);
-    input.addEventListener('keydown', e => {
-      if(e.key === 'Enter') {
-        userSend();
-      }
-    });
-
-    addMessage('Hallo, ich bin Gerd, dein Math-Chatbot! Schreib mir eine Aufgabe oder Gleichung.', 'gerd');
-    // Darkmode Toggle
-const toggleBtn = document.getElementById('toggleDarkmode');
-toggleBtn.addEventListener('click', () => {
-  document.body.classList.toggle('lightmode');
-  const isLight = document.body.classList.contains('lightmode');
-  toggleBtn.textContent = isLight ? 'Dark Mode' : 'Light Mode';
-  toggleBtn.setAttribute('aria-pressed', isLight);
-});
-
-// Smooth fade-in on scroll
-const fadeElements = document.querySelectorAll('.fade-in');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.classList.add('visible');
-    }
+<script>
+  // Darkmode Toggle
+  const toggleBtn = document.getElementById('toggleDarkmode');
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('lightmode');
+    const isLight = document.body.classList.contains('lightmode');
+    toggleBtn.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+    toggleBtn.setAttribute('aria-pressed', isLight);
   });
-}, { threshold: 0.3 });
 
-fadeElements.forEach(el => observer.observe(el));
-
-// Für den animierten Countdown:
-const countdownEl = document.getElementById('countdown');
-
-function animateCountdownText(text) {
-  countdownEl.innerHTML = '';
-  for (const char of text) {
-    const span = document.createElement('span');
-    span.textContent = char;
-    span.style.display = 'inline-block';
-    span.style.transition = 'color 0.6s ease';
-    countdownEl.appendChild(span);
-  }
-  let i = 0;
-  setInterval(() => {
-    const spans = countdownEl.querySelectorAll('span');
-    spans.forEach((span, idx) => {
-      span.style.color = '#00ff99';
-      span.style.textShadow = '0 0 10px #00ff99';
+  // Fade-in on scroll
+  const fadeElements = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
     });
-    spans[i].style.color = '#39ff14';
-    spans[i].style.textShadow = '0 0 20px #39ff14, 0 0 30px #00ff00';
-    i = (i + 1) % spans.length;
-  }, 350);
-}
+  }, { threshold: 0.3 });
+  fadeElements.forEach(el => observer.observe(el));
 
-// Aktualisiere updateCountdown-Funktion anpassen:
-function updateCountdown() {
-  const now = new Date();
-  // Launch: 11. August 2025, 00:00 MEZ (Sommerzeit)
-  const launch = new Date(Date.UTC(2025,7,10,22,0,0)); // 10.Aug 22:00 UTC = 11.Aug 0:00 MEZ(MESZ)
-  const diff = launch - now;
+  // Countdown Animation
+  const countdownEl = document.getElementById('countdown');
 
-  if(diff <= 0){
-    animateCountdownText("🚀 Es ist Zeit! Launch ist jetzt!");
-    clearInterval(countdownInterval);
-    return;
+  function animateCountdownText(text) {
+    countdownEl.innerHTML = '';
+    for (const char of text) {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.style.display = 'inline-block';
+      span.style.transition = 'color 0.6s ease';
+      countdownEl.appendChild(span);
+    }
+    let i = 0;
+    setInterval(() => {
+      const spans = countdownEl.querySelectorAll('span');
+      spans.forEach((span) => {
+        span.style.color = '#00ff99';
+        span.style.textShadow = '0 0 10px #00ff99';
+      });
+      spans[i].style.color = '#39ff14';
+      spans[i].style.textShadow = '0 0 20px #39ff14, 0 0 30px #00ff00';
+      i = (i + 1) % spans.length;
+    }, 350);
   }
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
+  function updateCountdown() {
+    const now = new Date();
+    // Launch: 11. August 2025, 00:00 MEZ (Sommerzeit)
+    const launch = new Date(Date.UTC(2025,7,10,22,0,0)); // 10.Aug 22:00 UTC = 11.Aug 0:00 MEZ(MESZ)
+    const diff = launch - now;
 
-  const text = `Launch in ${days} Tagen, ${hours} Stunden, ${minutes} Minuten und ${seconds} Sekunden`;
-  animateCountdownText(text);
-}
+    if(diff <= 0){
+      countdownEl.textContent = "🚀 Es ist Zeit! Launch ist jetzt!";
+      clearInterval(countdownInterval);
+      return;
+    }
 
-  </script>
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    const text = `Launch in ${days} Tagen, ${hours} Stunden, ${minutes} Minuten und ${seconds} Sekunden`;
+    animateCountdownText(text);
+  }
+
+  const countdownInterval = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // --- Math Chatbot Gerd ---
+  const chatbotMessages = document.getElementById('chatbot-messages');
+  const userInput = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.textContent = text;
+    msgDiv.className = sender === 'user' ? 'user-msg' : 'gerd-msg';
+    chatbotMessages.appendChild(msgDiv);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  }
+
+  // Simple math parser + solver (rechnerisch und mit eval für einfache Ausdrücke)
+  function solveMath(query) {
+    try {
+      // Ersetze deutsche Division "geteilt durch" mit "/"
+      query = query.toLowerCase();
+      query = query.replace(/geteilt durch/g, '/');
+      query = query.replace(/mal/g, '*');
+      query = query.replace(/plus/g, '+');
+      query = query.replace(/minus/g, '-');
+      // Einfache Sicherheitscheck für allowed chars (Zahlen, +-/*().)
+      if(!/^[0-9+\-*/().\s]+$/.test(query)){
+        return "Sorry, ich kann nur einfache Rechenaufgaben lösen.";
+      }
+      // Eval funktioniert hier sicher genug, weil wir chars filtern
+      const result = eval(query);
+      if(result === undefined || result === null) return "Ich konnte das nicht berechnen.";
+      return `Ergebnis: ${result}`;
+    } catch {
+      return "Fehler bei der Berechnung. Bitte überprüfe die Aufgabe.";
+    }
+  }
+
+  sendBtn.addEventListener('click', () => {
+    const input = userInput.value.trim();
+    if(!input) return;
+    addMessage(input, 'user');
+
+    // Gerd antwortet
+    const answer = solveMath(input);
+    setTimeout(() => addMessage(answer, 'gerd'), 800);
+
+    userInput.value = '';
+    userInput.focus();
+  });
+
+  userInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter') sendBtn.click();
+  });
+
+</script>
 </body>
 </html>
