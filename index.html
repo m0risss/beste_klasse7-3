@@ -1,191 +1,421 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hier entsteht was Großes...</title>
-  <style>
-    :root {
-      --bg: #0f0f0f;
-      --fg: #00ff88;
-      --text: #ffffff;
-      --muted: #888;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gerd's Upgrade & Unterhaltung</title>
+<style>
+  /* Farbvariablen */
+  :root {
+    --bg: #0a0a0a;
+    --fg: #00cc66;
+    --text: #e0e0e0;
+    --muted: #555;
+    --accent: #ff0000;
+    --button-bg: #00cc66;
+    --button-hover-bg: #00bb55;
+    --button-color: #000;
+  }
+  /* Reset & Basis */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  a {
+    color: var(--fg);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
 
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      scroll-behavior: smooth;
-    }
+  /* Tageszeit Hintergrund */
+  #daytime-bg {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(180deg, #001a00 0%, #003300 50%, #000000 100%);
+    z-index: -3;
+    transition: background 2s ease;
+  }
+  #sun, #moon {
+    position: fixed;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    top: 15vh;
+    left: 10vw;
+    box-shadow: 0 0 20px var(--fg);
+    transition: opacity 1s ease;
+  }
+  #sun {
+    background: radial-gradient(circle, #ffec64 30%, #ffb300 90%);
+    filter: drop-shadow(0 0 10px #ffb300);
+  }
+  #moon {
+    background: radial-gradient(circle, #ddd 30%, #aaa 90%);
+    filter: drop-shadow(0 0 8px #bbb);
+  }
+  #stars {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: url('https://cdn.jsdelivr.net/gh/joshbuchea/starfield@master/starfield.png') repeat;
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: -2;
+  }
 
-    header {
-      text-align: center;
-      padding: 4rem 1rem 2rem;
-    }
+  /* Hauptcontainer */
+  #container {
+    max-width: 700px;
+    margin: 5rem auto 4rem;
+    padding: 0 1rem;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: var(--fg);
+    margin-bottom: 1rem;
+  }
+  /* Chatbereich */
+  #chat {
+    background: #111;
+    border: 2px solid var(--fg);
+    border-radius: 16px;
+    min-height: 320px;
+    padding: 1rem;
+    color: var(--fg);
+    font-size: 1.1rem;
+    overflow-y: auto;
+    box-shadow: 0 0 30px #00cc6644 inset;
+  }
+  /* Chatnachrichten */
+  .msg {
+    max-width: 80%;
+    margin-bottom: 0.6rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .msg.user {
+    background: rgba(0, 204, 102, 0.3);
+    color: var(--button-color);
+    align-self: flex-end;
+    margin-left: auto;
+  }
+  .msg.bot {
+    background: rgba(0, 204, 102, 0.15);
+    color: var(--fg);
+    align-self: flex-start;
+    margin-right: auto;
+  }
 
+  /* Eingabe und Buttons */
+  #input-area {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  #userInput {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.1rem;
+    background: #1a1a1a;
+    color: var(--text);
+    outline-offset: 3px;
+    outline-color: var(--fg);
+  }
+  #sendBtn, #upgradeBtn {
+    background: var(--button-bg);
+    border: none;
+    border-radius: 10px;
+    padding: 0 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--button-color);
+    box-shadow: 0 0 10px var(--fg);
+    transition: background-color 0.3s ease;
+  }
+  #sendBtn:hover, #upgradeBtn:hover {
+    background: var(--button-hover-bg);
+  }
+
+  /* Upgrade Anzeige */
+  #entertainment-text {
+    margin-top: 1rem;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-align: center;
+    color: var(--fg);
+    user-select: none;
+  }
+
+  /* Dashboard unten links */
+  #dashboard {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: #000d00cc;
+    color: var(--fg);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    box-shadow: 0 0 15px #00cc6633;
+    user-select: none;
+    max-width: 220px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    border-top: 1px solid #00440055;
+    user-select: none;
+  }
+  footer a {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Cookie Banner */
+  #cookie-banner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #002200dd;
+    color: var(--text);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    z-index: 1000;
+  }
+  #cookie-banner button {
+    background: var(--button-bg);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    color: var(--button-color);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--fg);
+    transition: background-color 0.3s ease;
+  }
+  #cookie-banner button:hover {
+    background: var(--button-hover-bg);
+  }
+
+  /* Scrollbar Styling */
+  #chat::-webkit-scrollbar {
+    width: 8px;
+  }
+  #chat::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  #chat::-webkit-scrollbar-thumb {
+    background: var(--fg);
+    border-radius: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    #container {
+      margin: 3rem 1rem 3rem;
+    }
     h1 {
-      font-size: 2.5rem;
-      color: var(--fg);
+      font-size: 2.2rem;
     }
-
-    #countdown {
-      font-size: 2rem;
-      margin-top: 1rem;
-      animation: pulse 1.5s infinite ease-in-out;
+    #userInput {
+      font-size: 1rem;
     }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    #sendBtn, #upgradeBtn {
+      font-size: 1rem;
+      padding: 0 1rem;
     }
-
-    .chatbot, .features {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: #121212;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #00ff8870;
-      animation: fadein 1s ease-out;
+    #dashboard {
+      font-size: 0.8rem;
+      max-width: 150px;
+      padding: 0.7rem 1rem;
     }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    #chat {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .bot-msg, .user-msg {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      max-width: 90%;
-    }
-    .user-msg {
-      background: #00ff8850;
-      align-self: flex-end;
-    }
-    .bot-msg {
-      background: #00ff8825;
-      align-self: flex-start;
-    }
-
-    input, button {
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: none;
-      margin-top: 1rem;
-    }
-
-    #backToTop {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--fg);
-      color: #000;
-      padding: 0.5rem 1rem;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: none;
-    }
-
-    .socials {
-      text-align: center;
-      margin: 4rem 0 1rem;
-    }
-
-    .socials a {
-      color: var(--fg);
-      font-size: 2rem;
-      text-decoration: none;
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2rem; }
-      #countdown { font-size: 1.5rem; }
-      .chatbot { padding: 0.5rem; }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Hier entsteht was Großes...</h1>
-    <div id="countdown"></div>
-  </header>
 
-  <section class="chatbot">
-    <h2>Chatbot Gerd 🤖</h2>
-    <div id="chat"></div>
-    <input type="text" id="userInput" placeholder="Frag Gerd was...">
-    <button onclick="askGerd()">Senden</button>
-  </section>
+<div id="daytime-bg"></div>
+<div id="sun"></div>
+<div id="moon" style="opacity:0;"></div>
+<div id="stars" style="opacity:0;"></div>
 
-  <div class="socials">
-    <a href="https://www.youtube.com/@Noesis1" target="_blank">▶</a>
+<div id="container" role="main" aria-label="Chatbot und Steuerung">
+  <h1>Gerd's Upgrade & Unterhaltung</h1>
+  <div id="chat" aria-live="polite" aria-atomic="false" role="log" aria-relevant="additions"></div>
+
+  <div id="input-area">
+    <input id="userInput" type="text" aria-label="Nachricht eingeben" placeholder="Schreibe hier..." autocomplete="off" />
+    <button id="sendBtn" aria-label="Nachricht senden">Senden</button>
   </div>
 
-  <div id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</div>
+  <button id="upgradeBtn" aria-label="Upgrade Gerd starten">Upgrade Gerd!</button>
 
-  <script>
-    // Countdown
-    const countdown = document.getElementById("countdown");
-    const launchDate = new Date("2025-08-11T00:00:00+02:00");
-    setInterval(() => {
-      const now = new Date();
-      const diff = launchDate - now;
-      if (diff <= 0) {
-        countdown.textContent = "🚀 Es geht los!";
-        return;
-      }
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      countdown.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }, 1000);
+  <p id="entertainment-text" aria-live="polite" aria-atomic="true">Upgrade-Level: 0</p>
+</div>
 
-    // Gerd Chatbot
-    const chat = document.getElementById("chat");
-    function askGerd() {
-      const input = document.getElementById("userInput");
-      const question = input.value.trim();
-      if (!question) return;
-      chat.innerHTML += `<div class='user-msg'>${question}</div>`;
-      const answer = solveMath(question);
-      chat.innerHTML += `<div class='bot-msg'><strong>Gerd:</strong> ${answer}</div>`;
-      input.value = "";
-      chat.scrollTop = chat.scrollHeight;
+<div id="dashboard" role="complementary" aria-live="polite" aria-atomic="true" tabindex="0">
+  <div><strong>Stats:</strong></div>
+  <div>Gesendete Chatnachrichten: <span id="chatCount">0</span></div>
+  <div>Upgrade-Level: <span id="upgradeCount">0</span></div>
+</div>
+
+<footer role="contentinfo">
+  <p>© 2025 by Gerd-Entwicklerteam | <a href="mailto:kontakt@example.com">kontakt@example.com</a> | 
+  <a href="https://twitter.com/Noesis1" target="_blank" rel="noopener noreferrer">Twitter</a> | 
+  <a href="https://www.youtube.com/@Noesis1" target="_blank" rel="noopener noreferrer">YouTube</a></p>
+</footer>
+
+<div id="cookie-banner" role="alert" aria-live="assertive" aria-atomic="true" style="display:none;">
+  Diese Website verwendet Cookies, um das Erlebnis zu verbessern.
+  <button id="cookieAcceptBtn" aria-label="Cookies akzeptieren">Akzeptieren</button>
+</div>
+
+<script>
+(() => {
+  // ---- Variables ----
+  const chat = document.getElementById('chat');
+  const userInput = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const upgradeBtn = document.getElementById('upgradeBtn');
+  const entertainmentText = document.getElementById('entertainment-text');
+  const chatCountElem = document.getElementById('chatCount');
+  const upgradeCountElem = document.getElementById('upgradeCount');
+  const cookieBanner = document.getElementById('cookie-banner');
+  const cookieAcceptBtn = document.getElementById('cookieAcceptBtn');
+  const daytimeBg = document.getElementById('daytime-bg');
+  const sun = document.getElementById('sun');
+  const moon = document.getElementById('moon');
+  const stars = document.getElementById('stars');
+
+  let chatCount = 0;
+  let upgradeCount = 0;
+
+  // ---- Tageszeit-Animation ----
+  function updateDaytime() {
+    const now = new Date();
+    const h = now.getHours();
+    // Tageszeit: 6-18 Uhr = Tag, sonst Nacht
+    if (h >= 6 && h < 18) {
+      // Tag
+      daytimeBg.style.background = 'linear-gradient(180deg, #001a00 0%, #003300 50%, #000000 100%)';
+      sun.style.opacity = '1';
+      moon.style.opacity = '0';
+      stars.style.opacity = '0';
+      // Sonnenbewegung (einfach horizontal)
+      const progress = (h - 6 + now.getMinutes()/60) / 12;
+      sun.style.left = (10 + progress * 80) + 'vw';
+      sun.style.top = (15 - progress * 10) + 'vh';
+    } else {
+      // Nacht
+      daytimeBg.style.background = 'linear-gradient(180deg, #000000 0%, #001100 50%, #001100 100%)';
+      sun.style.opacity = '0';
+      moon.style.opacity = '1';
+      stars.style.opacity = '1';
+      // Mondposition ähnlich zur Sonne, aber von 18 bis 6
+      let nightProgress;
+      if (h >= 18) nightProgress = (h - 18 + now.getMinutes()/60) / 12;
+      else nightProgress = (h + 6 + now.getMinutes()/60) / 12;
+      moon.style.left = (10 + nightProgress * 80) + 'vw';
+      moon.style.top = (25 - nightProgress * 10) + 'vh';
     }
+  }
+  updateDaytime();
+  setInterval(updateDaytime, 60 * 1000); // jede Minute aktualisieren
 
-    function solveMath(q) {
-      try {
-        if (/\d+\s*(\+|\-|\*|\/)\s*\d+/.test(q)) {
-          return eval(q);
-        } else if (q.toLowerCase().includes("geteilt") || q.includes("durch")) {
-          const parts = q.match(/(\d+).*?(\d+)/);
-          if (parts) return parts[1] / parts[2];
-        } else if (q.toLowerCase().includes("plus")) {
-          const parts = q.match(/(\d+).*?(\d+)/);
-          if (parts) return +parts[1] + +parts[2];
-        } else {
-          return "Ich bin Gerd und verstehe einfache Rechnungen. Frag mich z.B.: 5 * 3 oder '20 durch 4'";
-        }
-      } catch (e) {
-        return "Fehler bei der Berechnung.";
-      }
-    }
+  // ---- Chat-Logik ----
+  function appendMessage(text, sender = 'bot') {
+    const div = document.createElement('div');
+    div.classList.add('msg', sender);
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-    // Back to top sichtbar machen
-    window.onscroll = () => {
-      document.getElementById("backToTop").style.display = window.scrollY > 200 ? "block" : "none";
-    };
-  </script>
+  function botResponse(input) {
+    // Sehr einfache Antworten, kann leicht erweitert werden
+    const msg = input.toLowerCase();
+    if (!msg.trim()) return "Sag doch was!";
+    if (msg.includes('hallo') || msg.includes('hi')) return "Hallo! Wie kann ich dir helfen?";
+    if (msg.includes('wie geht')) return "Mir geht's super, danke!";
+    if (msg.includes('hilfe')) return "Ich bin hier, um dich zu unterhalten und upgraden!";
+    if (msg.includes('upgrade')) return "Drück den Upgrade-Button, um Gerd besser zu machen!";
+    return "Gerd sagt: „Ich habe dich gehört: " + input + "“";
+  }
+
+  sendBtn.addEventListener('click', () => {
+    const input = userInput.value.trim();
+    if (!input) return;
+    appendMessage(input, 'user');
+    chatCount++;
+    chatCountElem.textContent = chatCount;
+    userInput.value = '';
+    setTimeout(() => {
+      const response = botResponse(input);
+      appendMessage(response, 'bot');
+    }, 700);
+  });
+
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendBtn.click();
+  });
+
+  // ---- Upgrade Logik ----
+  upgradeBtn.addEventListener('click', () => {
+    upgradeCount++;
+    upgradeCountElem.textContent = upgradeCount;
+    entertainmentText.textContent = `Upgrade-Level: ${upgradeCount}`;
+
+    // Kleine Animation im Chat
+    appendMessage(`Gerd wurde auf Level ${upgradeCount} upgraded!`, 'bot');
+
+    // Extra Unterhaltungseffekt je nach Level
+    if (upgradeCount === 3) appendMessage("Gerd hat jetzt eine coole Stimme!", 'bot');
+    if (upgradeCount === 5) appendMessage("Gerd kann jetzt Witze erzählen!", 'bot');
+    if (upgradeCount === 10) appendMessage("Gerd ist jetzt ein Superstar!", 'bot');
+
+    // Optional: kleine Farbflashs beim Upgrade
+    document.body.style.backgroundColor = '#003300';
+    setTimeout(() => { document.body.style.backgroundColor = 'var(--bg)'; }, 300);
+  });
+
+  // ---- Cookie Banner ----
+  function cookiesAccepted() {
+    localStorage.setItem('cookiesAccepted', 'true');
+    cookieBanner.style.display = 'none';
+  }
+  cookieAcceptBtn.addEventListener('click', () => {
+    cookiesAccepted();
+  });
+  if (localStorage.getItem('cookiesAccepted') === 'true') {
+    cookieBanner.style.display = 'none';
+  } else {
+    cookieBanner.style.display = 'flex';
+  }
+
+})();
+</script>
+
 </body>
 </html>
