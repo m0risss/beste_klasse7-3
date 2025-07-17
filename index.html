@@ -3,419 +3,1181 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Gerd's Upgrade & Unterhaltung</title>
+<title>Hier entsteht was Großes...</title>
 <style>
-  /* Farbvariablen */
+  /* Root Farben & Grunddesign */
   :root {
     --bg: #0a0a0a;
     --fg: #00cc66;
+    --fg-light: #33ee88;
     --text: #e0e0e0;
     --muted: #555;
-    --accent: #ff0000;
-    --button-bg: #00cc66;
-    --button-hover-bg: #00bb55;
-    --button-color: #000;
+    --accent-red: #e52b2b;
+    --accent-red-light: #ff4c4c;
+    --shadow-glow: #00cc6622;
+    --shadow-glow-strong: #00cc6655;
   }
-  /* Reset & Basis */
+
+  /* Reset & Grundlayouts */
   * {
     box-sizing: border-box;
   }
-  body {
-    margin: 0; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  body, html {
+    margin: 0; padding: 0;
     background: var(--bg);
     color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+    min-height: 100vh;
     overflow-x: hidden;
   }
-  a {
-    color: var(--fg);
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
 
-  /* Tageszeit Hintergrund */
-  #daytime-bg {
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: linear-gradient(180deg, #001a00 0%, #003300 50%, #000000 100%);
-    z-index: -3;
-    transition: background 2s ease;
-  }
-  #sun, #moon {
-    position: fixed;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    top: 15vh;
-    left: 10vw;
-    box-shadow: 0 0 20px var(--fg);
-    transition: opacity 1s ease;
-  }
-  #sun {
-    background: radial-gradient(circle, #ffec64 30%, #ffb300 90%);
-    filter: drop-shadow(0 0 10px #ffb300);
-  }
-  #moon {
-    background: radial-gradient(circle, #ddd 30%, #aaa 90%);
-    filter: drop-shadow(0 0 8px #bbb);
-  }
-  #stars {
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: url('https://cdn.jsdelivr.net/gh/joshbuchea/starfield@master/starfield.png') repeat;
-    opacity: 0;
-    transition: opacity 1s ease;
-    z-index: -2;
-  }
-
-  /* Hauptcontainer */
-  #container {
-    max-width: 700px;
-    margin: 5rem auto 4rem;
+  /* Container & Max-Width */
+  .container {
+    max-width: 1200px;
+    margin: auto;
     padding: 0 1rem;
   }
-  h1 {
+
+  header {
+    padding: 4rem 0 2rem;
     text-align: center;
-    font-size: 2.8rem;
-    color: var(--fg);
-    margin-bottom: 1rem;
+    user-select: none;
   }
-  /* Chatbereich */
-  #chat {
+
+  header h1 {
+    font-size: 3rem;
+    color: var(--fg);
+    text-shadow: 0 0 15px var(--fg-light);
+    margin-bottom: 0.2rem;
+  }
+
+  header p.subtitle {
+    font-size: 1.25rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Countdown Styles */
+  #countdownContainer {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  #countdownLabel {
+    font-size: 1.3rem;
+    color: var(--muted);
+    user-select: none;
+  }
+  #countdown {
+    font-size: 2.5rem;
+    padding: 1rem 2rem;
+    border: 3px solid var(--fg);
+    border-radius: 15px;
+    background: #111111dd;
+    color: var(--fg);
+    box-shadow: 0 0 30px var(--shadow-glow);
+    animation: glowPulse 2.5s infinite ease-in-out;
+    min-width: 250px;
+    text-align: center;
+    font-weight: 700;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 30px var(--shadow-glow); }
+    50% { box-shadow: 0 0 60px var(--shadow-glow-strong); }
+  }
+
+  /* Chatbot Styles */
+  .chatbot {
+    max-width: 900px;
+    margin: 3rem auto 2rem auto;
     background: #111;
     border: 2px solid var(--fg);
-    border-radius: 16px;
-    min-height: 320px;
-    padding: 1rem;
+    border-radius: 20px;
+    box-shadow: 0 0 40px var(--shadow-glow);
+    padding: 2.5rem 3rem;
+    animation: fadein 1.5s ease forwards;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .chatbot h2 {
     color: var(--fg);
-    font-size: 1.1rem;
+    text-align: center;
+    font-size: 2rem;
+    text-shadow: 0 0 10px var(--fg-light);
+    margin: 0;
+    user-select: none;
+  }
+  #chat {
+    background: #161616;
+    border-radius: 15px;
+    height: 350px;
     overflow-y: auto;
-    box-shadow: 0 0 30px #00cc6644 inset;
+    padding: 1rem 1.5rem;
+    box-shadow: inset 0 0 20px var(--shadow-glow);
+    font-size: 1.1rem;
+    line-height: 1.5;
   }
-  /* Chatnachrichten */
   .msg {
-    max-width: 80%;
-    margin-bottom: 0.6rem;
-    padding: 0.5rem 1rem;
+    max-width: 85%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.7rem;
     border-radius: 12px;
-    line-height: 1.4;
-    font-weight: 600;
+    word-wrap: break-word;
+    user-select: text;
   }
-  .msg.user {
-    background: rgba(0, 204, 102, 0.3);
-    color: var(--button-color);
+  .user-msg {
+    background: var(--fg-light);
+    color: #000;
     align-self: flex-end;
-    margin-left: auto;
+    box-shadow: 0 0 10px var(--fg-light);
   }
-  .msg.bot {
-    background: rgba(0, 204, 102, 0.15);
-    color: var(--fg);
+  .bot-msg {
+    background: var(--fg);
+    color: #000;
     align-self: flex-start;
-    margin-right: auto;
+    box-shadow: 0 0 10px var(--fg);
   }
 
-  /* Eingabe und Buttons */
-  #input-area {
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.5rem;
-  }
+  /* Input und Button */
   #userInput {
-    flex-grow: 1;
+    font-size: 1.1rem;
     padding: 0.75rem 1rem;
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
-    font-size: 1.1rem;
-    background: #1a1a1a;
+    outline: none;
+    background: #222;
     color: var(--text);
-    outline-offset: 3px;
-    outline-color: var(--fg);
-  }
-  #sendBtn, #upgradeBtn {
-    background: var(--button-bg);
-    border: none;
-    border-radius: 10px;
-    padding: 0 1.5rem;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    color: var(--button-color);
-    box-shadow: 0 0 10px var(--fg);
+    box-shadow: inset 0 0 8px var(--shadow-glow);
     transition: background-color 0.3s ease;
   }
-  #sendBtn:hover, #upgradeBtn:hover {
-    background: var(--button-hover-bg);
+  #userInput:focus {
+    background: #2a2;
+    box-shadow: 0 0 15px var(--fg-light);
   }
-
-  /* Upgrade Anzeige */
-  #entertainment-text {
-    margin-top: 1rem;
+  #sendBtn {
+    margin-top: 0.8rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    font-size: 1.3rem;
-    text-align: center;
-    color: var(--fg);
-    user-select: none;
+    padding: 0.85rem 0;
+    border-radius: 15px;
+    border: none;
+    background: var(--fg);
+    color: #000;
+    cursor: pointer;
+    box-shadow: 0 0 25px var(--fg);
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  #sendBtn:hover {
+    background: var(--fg-light);
+    box-shadow: 0 0 40px var(--fg-light);
   }
 
-  /* Dashboard unten links */
-  #dashboard {
+  /* Scrollbar styling */
+  #chat::-webkit-scrollbar {
+    width: 10px;
+  }
+  #chat::-webkit-scrollbar-track {
+    background: #111;
+    border-radius: 10px;
+  }
+  #chat::-webkit-scrollbar-thumb {
+    background: var(--fg);
+    border-radius: 10px;
+  }
+
+  /* Back to Top Button */
+  #backToTop {
     position: fixed;
-    bottom: 10px;
-    left: 10px;
-    background: #000d00cc;
-    color: var(--fg);
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    font-family: monospace;
-    font-size: 0.9rem;
-    box-shadow: 0 0 15px #00cc6633;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--fg);
+    color: #000;
+    padding: 0.7rem 1.2rem;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--fg);
+    display: none;
     user-select: none;
-    max-width: 220px;
+    transition: transform 0.2s ease;
+    z-index: 9999;
+  }
+  #backToTop:hover {
+    transform: scale(1.2);
   }
 
-  /* Footer */
-  footer {
+  /* Social Buttons */
+  .socials {
     text-align: center;
-    padding: 1.5rem 1rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-    border-top: 1px solid #00440055;
+    margin: 3rem 0 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 45px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px #0008;
     user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
   }
-  footer a {
-    color: var(--fg);
-    font-weight: 600;
+  .social-btn.youtube {
+    background: #ff0000;
+    box-shadow: 0 0 15px #ff3333;
   }
-  footer a:hover {
-    text-decoration: underline;
+  .social-btn.youtube:hover {
+    box-shadow: 0 0 30px #ff4444;
+    transform: scale(1.05);
+  }
+  .social-btn.tiktok {
+    background: #000;
+    color: white;
+    box-shadow: 0 0 15px #4e8ef7;
+  }
+  .social-btn.tiktok:hover {
+    box-shadow: 0 0 30px #72a5ff;
+    transform: scale(1.05);
+  }
+  .social-btn svg {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    fill: currentColor;
   }
 
   /* Cookie Banner */
-  #cookie-banner {
+  #cookieBanner {
     position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: #002200dd;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
     color: var(--text);
     padding: 1rem 2rem;
+    border-top: 2px solid var(--fg);
+    box-shadow: 0 -2px 20px var(--shadow-glow);
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 1rem;
-    z-index: 1000;
+    z-index: 99999;
   }
-  #cookie-banner button {
-    background: var(--button-bg);
+  #cookieBanner p {
+    margin: 0;
+    max-width: 70%;
+    line-height: 1.4;
+  }
+  #cookieBanner button {
+    background: var(--fg);
+    color: #000;
     border: none;
-    border-radius: 8px;
     padding: 0.5rem 1rem;
     font-weight: 700;
-    color: var(--button-color);
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 0 8px var(--fg);
+    box-shadow: 0 0 15px var(--fg);
     transition: background-color 0.3s ease;
   }
-  #cookie-banner button:hover {
-    background: var(--button-hover-bg);
+  #cookieBanner button:hover {
+    background: var(--fg-light);
   }
 
-  /* Scrollbar Styling */
+  /* FadeIn Animation */
+  @keyframes fadein {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 700px) {
+    header h1 {
+      font-size: 2.2rem;
+    }
+    header p.subtitle {
+      font-size: 1rem;
+    }
+    #countdown {
+      font-size:
+<style>
+  /* --- Teil 2: Styles für Chatbot, Countdown, Buttons, Animationen --- */
+
+  /* Countdown */
+  #countdownContainer {
+    margin: 2rem auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #00ff00;
+    text-shadow: 0 0 8px #00ff00;
+    font-size: 2.2rem;
+  }
+  #countdownLabel {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Chatbot */
+  .chatbot {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: #111;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 0 12px #00ff00aa;
+    color: #eee;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .chatbot h2 {
+    color: #00ff00;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  #chat {
+    background: #222;
+    height: 280px;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  .msg {
+    margin-bottom: 0.8rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  .bot-msg {
+    background: #003300cc;
+    color: #aaffaa;
+    align-self: flex-start;
+  }
+  .user-msg {
+    background: #004400dd;
+    color: #ccffcc;
+    align-self: flex-end;
+    margin-left: auto;
+  }
+  #userInput {
+    margin-top: 1rem;
+    width: calc(100% - 90px);
+    padding: 0.5rem 0.7rem;
+    font-size: 1rem;
+    border: 1.5px solid #00ff00;
+    border-radius: 8px;
+    background: #111;
+    color: #00ff00;
+    outline: none;
+    font-family: monospace;
+  }
+  #userInput::placeholder {
+    color: #006600aa;
+  }
+  #sendBtn {
+    width: 70px;
+    margin-left: 10px;
+    padding: 0.5rem 0;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000;
+    background: #00ff00;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #sendBtn:hover {
+    background: #00cc00;
+  }
+
+  /* Social Buttons */
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 3rem auto;
+  }
+  .social-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: #00ff00;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    border: 2px solid #00ff00;
+    border-radius: 12px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .social-btn:hover {
+    background-color: #00ff00;
+    color: #000;
+  }
+  .social-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+
+  /* Back to Top Button */
+  #backToTop {
+    position: fixed;
+    bottom: 35px;
+    right: 35px;
+    background: #00ff00;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ff00aa;
+    display: none;
+    transition: background-color 0.3s ease;
+  }
+  #backToTop:hover {
+    background: #00cc00;
+  }
+
+  /* Cookie Banner */
+  #cookieBanner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+    color: #00ff00;
+    padding: 1rem 2rem;
+    box-shadow: 0 -3px 6px #00ff00aa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 9999;
+  }
+  #cookieBanner p {
+    margin: 0;
+    max-width: 80%;
+  }
+  #acceptCookies {
+    background: #00ff00;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #000;
+    transition: background-color 0.3s ease;
+  }
+  #acceptCookies:hover {
+    background: #00cc00;
+  }
+
+  /* Scrollbar Styling for Chat */
   #chat::-webkit-scrollbar {
     width: 8px;
   }
-  #chat::-webkit-scrollbar-track {
-    background: #0a0a0a;
-  }
   #chat::-webkit-scrollbar-thumb {
-    background: var(--fg);
-    border-radius: 8px;
+    background-color: #00ff00cc;
+    border-radius: 4px;
+  }
+
+  /* Animation für Titel */
+  header h1 {
+    animation: glow 2.5s infinite alternate;
+  }
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+    }
+    to {
+      text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+    }
   }
 
   /* Responsive */
-  @media (max-width: 640px) {
-    #container {
-      margin: 3rem 1rem 3rem;
+  @media (max-width: 700px) {
+    .chatbot {
+      padding: 1rem 1.2rem;
     }
-    h1 {
-      font-size: 2.2rem;
+    #chat {
+      height: 200px;
+      font-size: 0.9rem;
     }
     #userInput {
-      font-size: 1rem;
+      width: calc(100% - 80px);
+      font-size: 0.9rem;
     }
-    #sendBtn, #upgradeBtn {
-      font-size: 1rem;
-      padding: 0 1rem;
+    #sendBtn {
+      width: 60px;
+      font-size: 0.9rem;
+      padding: 0.4rem 0;
     }
-    #dashboard {
-      font-size: 0.8rem;
-      max-width: 150px;
-      padding: 0.7rem 1rem;
+    .social-btn {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.9rem;
     }
   }
 </style>
+
 </head>
 <body>
 
-<div id="daytime-bg"></div>
-<div id="sun"></div>
-<div id="moon" style="opacity:0;"></div>
-<div id="stars" style="opacity:0;"></div>
+<header>
+  <h1>Schwarz-Grün Monster Website</h1>
+  <p class="subtitle">Clean, minimalistisch, mit Gerd Upgrade-Chatbot & coolen Features</p>
+</header>
 
-<div id="container" role="main" aria-label="Chatbot und Steuerung">
-  <h1>Gerd's Upgrade & Unterhaltung</h1>
-  <div id="chat" aria-live="polite" aria-atomic="false" role="log" aria-relevant="additions"></div>
+<div class="container">
 
-  <div id="input-area">
-    <input id="userInput" type="text" aria-label="Nachricht eingeben" placeholder="Schreibe hier..." autocomplete="off" />
+  <!-- Countdown -->
+  <section id="countdownContainer" aria-label="Countdown zur Website-Fertigstellung">
+    <div id="countdownLabel">Noch bis zum Launch:</div>
+    <div id="countdown" role="timer" aria-live="polite" aria-atomic="true">00:00:00:00</div>
+  </section>
+
+  <!-- Chatbot -->
+  <section class="chatbot" aria-label="Chatbot zur Unterhaltung und Upgrades">
+    <h2>Gerd, dein Upgrade- und Unterhaltungs-Bot</h2>
+    <div id="chat" role="log" aria-live="polite" aria-relevant="additions" tabindex="0"></div>
+    <input id="userInput" type="text" placeholder="Schreib was an Gerd..." aria-label="Chat Eingabe" autocomplete="off" />
     <button id="sendBtn" aria-label="Nachricht senden">Senden</button>
-  </div>
+  </section>
 
-  <button id="upgradeBtn" aria-label="Upgrade Gerd starten">Upgrade Gerd!</button>
+  <!-- Social Buttons -->
+  <section class="socials" aria-label="Social Media Links">
+    <a href="https://youtube.com/" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube Kanal">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M10 15l5.19-3L10 9v6zM21.8 7.2c-.2-1.5-1.5-2.7-3-2.8-2.7-.2-6.8-.2-6.8-.2s-4.1 0-6.8.2c-1.5.1-2.8 1.3-3 2.8C2 9 2 12 2 12s0 3 .2 4.8c.2 1.5 1.5 2.7 3 2.8 2.7.2 6.8.2 6.8.2s4.1 0 6.8-.2c1.5-.1 2.8-1.3 3-2.8.2-1.8.2-4.8.2-4.8s0-3-.2-4.8z" />
+      </svg>
+      YouTube
+    </a>
+    <a href="https://tiktok.com/" target="_blank" rel="noopener" class="social-btn" aria-label="TikTok Kanal">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M9 3v12a3 3 0 003 3 3 3 0 003-3v-3h3v3a6 6 0 01-6 6 6 6 0 01-6-6V7h3z" />
+      </svg>
+      TikTok
+    </a>
+  </section>
 
-  <p id="entertainment-text" aria-live="polite" aria-atomic="true">Upgrade-Level: 0</p>
 </div>
 
-<div id="dashboard" role="complementary" aria-live="polite" aria-atomic="true" tabindex="0">
-  <div><strong>Stats:</strong></div>
-  <div>Gesendete Chatnachrichten: <span id="chatCount">0</span></div>
-  <div>Upgrade-Level: <span id="upgradeCount">0</span></div>
-</div>
+<!-- Back to Top Button -->
+<button id="backToTop" aria-label="Zurück nach oben" title="Nach oben">⬆️</button>
 
-<footer role="contentinfo">
-  <p>© 2025 by Gerd-Entwicklerteam | <a href="mailto:kontakt@example.com">kontakt@example.com</a> | 
-  <a href="https://twitter.com/Noesis1" target="_blank" rel="noopener noreferrer">Twitter</a> | 
-  <a href="https://www.youtube.com/@Noesis1" target="_blank" rel="noopener noreferrer">YouTube</a></p>
-</footer>
-
-<div id="cookie-banner" role="alert" aria-live="assertive" aria-atomic="true" style="display:none;">
-  Diese Website verwendet Cookies, um das Erlebnis zu verbessern.
-  <button id="cookieAcceptBtn" aria-label="Cookies akzeptieren">Akzeptieren</button>
+<!-- Cookie Banner -->
+<div id="cookieBanner" role="region" aria-live="polite" aria-label="Cookie Zustimmung">
+  <p>Diese Website verwendet Cookies, um dir das beste Erlebnis zu bieten. Durch die Nutzung stimmst du dem zu.</p>
+  <button id="acceptCookies" aria-label="Cookies akzeptieren">Akzeptieren</button>
 </div>
 
 <script>
-(() => {
-  // ---- Variables ----
-  const chat = document.getElementById('chat');
-  const userInput = document.getElementById('userInput');
-  const sendBtn = document.getElementById('sendBtn');
-  const upgradeBtn = document.getElementById('upgradeBtn');
-  const entertainmentText = document.getElementById('entertainment-text');
-  const chatCountElem = document.getElementById('chatCount');
-  const upgradeCountElem = document.getElementById('upgradeCount');
-  const cookieBanner = document.getElementById('cookie-banner');
-  const cookieAcceptBtn = document.getElementById('cookieAcceptBtn');
-  const daytimeBg = document.getElementById('daytime-bg');
-  const sun = document.getElementById('sun');
-  const moon = document.getElementById('moon');
-  const stars = document.getElementById('stars');
+  // Countdown Timer Setup
+  const countdownElem = document.getElementById('countdown');
+  const launchDate = new Date(Date.now() + 30*24*60*60*1000); // 30 Tage ab jetzt
 
-  let chatCount = 0;
-  let upgradeCount = 0;
-
-  // ---- Tageszeit-Animation ----
-  function updateDaytime() {
+  function updateCountdown() {
     const now = new Date();
-    const h = now.getHours();
-    // Tageszeit: 6-18 Uhr = Tag, sonst Nacht
-    if (h >= 6 && h < 18) {
-      // Tag
-      daytimeBg.style.background = 'linear-gradient(180deg, #001a00 0%, #003300 50%, #000000 100%)';
-      sun.style.opacity = '1';
-      moon.style.opacity = '0';
-      stars.style.opacity = '0';
-      // Sonnenbewegung (einfach horizontal)
-      const progress = (h - 6 + now.getMinutes()/60) / 12;
-      sun.style.left = (10 + progress * 80) + 'vw';
-      sun.style.top = (15 - progress * 10) + 'vh';
-    } else {
-      // Nacht
-      daytimeBg.style.background = 'linear-gradient(180deg, #000000 0%, #001100 50%, #001100 100%)';
-      sun.style.opacity = '0';
-      moon.style.opacity = '1';
-      stars.style.opacity = '1';
-      // Mondposition ähnlich zur Sonne, aber von 18 bis 6
-      let nightProgress;
-      if (h >= 18) nightProgress = (h - 18 + now.getMinutes()/60) / 12;
-      else nightProgress = (h + 6 + now.getMinutes()/60) / 12;
-      moon.style.left = (10 + nightProgress * 80) + 'vw';
-      moon.style.top = (25 - nightProgress * 10) + 'vh';
+    const diff = launchDate - now;
+
+    if(diff <= 0) {
+      countdownElem.textContent = "Gestartet!";
+      clearInterval(countdownInterval);
+      return;
     }
-  }
-  updateDaytime();
-  setInterval(updateDaytime, 60 * 1000); // jede Minute aktualisieren
 
-  // ---- Chat-Logik ----
-  function appendMessage(text, sender = 'bot') {
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff / (1000*60*60)) % 24);
+    const minutes = Math.floor((diff / (1000*60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    countdownElem.textContent =
+      `${days.toString().padStart(2,'0')}:`+
+      `${hours.toString().padStart(2,'0')}:`+
+      `${minutes.toString().padStart(2,'0')}:`+
+      `${seconds.toString().padStart(2,'0')}`;
+  }
+
+  const countdownInterval = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // Chatbot Logik
+  const chatElem = document.getElementById('chat');
+  const inputElem = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  const botName = "Gerd";
+
+  const botReplies = [
+    "Hey! Wie kann ich dir helfen?",
+    "Upgrade gefällig? Ich hab das perfekte Paket!",
+    "Schwarz-Grün ist das neue Schwarz!",
+    "Ich bin Gerd, dein smarter Bot für coole Features.",
+    "Lust auf einen Tipp für deinen nächsten Code?",
+    "Heute gibt's ein Update, bleib dran!",
+    "Das klingt spannend, erzähl mehr!",
+    "Brauchst du Hilfe beim Coden? Ich bin da.",
+    "Hier gibt's keine Bugs, nur Features!",
+    "Cool, dass du hier bist. Was willst du wissen?"
+  ];
+
+  function appendMessage(text, fromUser = false) {
     const div = document.createElement('div');
-    div.classList.add('msg', sender);
+    div.classList.add('msg');
+    div.classList.add(fromUser ? 'user-msg' : 'bot-msg');
     div.textContent = text;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
+    chatElem.appendChild(div);
+    chatElem.scrollTop = chatElem.scrollHeight;
   }
 
-  function botResponse(input) {
-    // Sehr einfache Antworten, kann leicht erweitert werden
-    const msg = input.toLowerCase();
-    if (!msg.trim()) return "Sag doch was!";
-    if (msg.includes('hallo') || msg.includes('hi')) return "Hallo! Wie kann ich dir helfen?";
-    if (msg.includes('wie geht')) return "Mir geht's super, danke!";
-    if (msg.includes('hilfe')) return "Ich bin hier, um dich zu unterhalten und upgraden!";
-    if (msg.includes('upgrade')) return "Drück den Upgrade-Button, um Gerd besser zu machen!";
-    return "Gerd sagt: „Ich habe dich gehört: " + input + "“";
+  function botReply() {
+    const reply = botReplies[Math.floor(Math.random() * botReplies.length)];
+    appendMessage(reply, false);
   }
 
   sendBtn.addEventListener('click', () => {
-    const input = userInput.value.trim();
-    if (!input) return;
-    appendMessage(input, 'user');
-    chatCount++;
-    chatCountElem.textContent = chatCount;
-    userInput.value = '';
-    setTimeout(() => {
-      const response = botResponse(input);
-      appendMessage(response, 'bot');
-    }, 700);
+    const msg = inputElem.value.trim();
+    if(!msg) return;
+    appendMessage(msg, true);
+    inputElem.value = "";
+    setTimeout(botReply, 1000 + Math.random() * 1000);
   });
 
-  userInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendBtn.click();
+  inputElem.addEventListener('keydown', e => {
+    if(e.key === 'Enter') sendBtn.click();
   });
 
-  // ---- Upgrade Logik ----
-  upgradeBtn.addEventListener('click', () => {
-    upgradeCount++;
-    upgradeCountElem.textContent = upgradeCount;
-    entertainmentText.textContent = `Upgrade-Level: ${upgradeCount}`;
-
-    // Kleine Animation im Chat
-    appendMessage(`Gerd wurde auf Level ${upgradeCount} upgraded!`, 'bot');
-
-    // Extra Unterhaltungseffekt je nach Level
-    if (upgradeCount === 3) appendMessage("Gerd hat jetzt eine coole Stimme!", 'bot');
-    if (upgradeCount === 5) appendMessage("Gerd kann jetzt Witze erzählen!", 'bot');
-    if (upgradeCount === 10) appendMessage("Gerd ist jetzt ein Superstar!", 'bot');
-
-    // Optional: kleine Farbflashs beim Upgrade
-    document.body.style.backgroundColor = '#003300';
-    setTimeout(() => { document.body.style.backgroundColor = 'var(--bg)'; }, 300);
+  // Back to Top Button
+  const backToTopBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 300) backToTopBtn.style.display = 'block';
+    else backToTopBtn.style.display = 'none';
   });
 
-  // ---- Cookie Banner ----
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Cookie Banner Logik
+  const cookieBanner = document.getElementById('cookieBanner');
+  const acceptCookiesBtn = document.getElementById('acceptCookies');
+
   function cookiesAccepted() {
+    return localStorage.getItem('cookiesAccepted') === 'true';
+  }
+
+  function hideCookieBanner() {
+    cookieBanner.style.display = 'none';
+  }
+
+  if(cookiesAccepted()) hideCookieBanner();
+
+  acceptCookiesBtn.addEventListener('click', () => {
+    localStorage.setItem('cookiesAccepted', 'true');
+    hideCookieBanner();
+  });
+
+</script>
+<style>
+  /* --- Teil 3: Galerie + Dynamische Farbe + Weitere Animationen --- */
+
+  /* Galerie Container */
+  .gallery {
+    max-width: 900px;
+    margin: 3rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 1.5rem;
+  }
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 0 10px #00ff0088;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+    background: #111;
+  }
+
+  .gallery-item:hover {
+    transform: scale(1.05) rotate(1deg);
+    box-shadow: 0 0 20px #00ff00cc;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    display: block;
+    border-radius: 16px;
+    transition: filter 0.4s ease;
+    filter: grayscale(60%);
+  }
+  .gallery-item:hover img {
+    filter: grayscale(0%);
+  }
+
+  .gallery-caption {
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    color: #00ff00dd;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 0 0 8px #00ff00cc;
+  }
+
+  /* Dynamischer Farbwechsel-Hintergrund */
+  #colorWave {
+    margin: 3rem auto;
+    max-width: 1000px;
+    height: 150px;
+    border-radius: 24px;
+    background: linear-gradient(270deg, #00ff00, #003300, #00ff00);
+    background-size: 600% 600%;
+    animation: colorShift 15s ease infinite;
+    box-shadow: 0 0 25px #00ff00cc;
+  }
+
+  @keyframes colorShift {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 4rem;
+    padding: 2rem 1rem;
+    text-align: center;
+    background: #111;
+    color: #00ff00cc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.07em;
+  }
+  footer a {
+    color: #00ff00aa;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  footer a:hover {
+    color: #00ff00;
+  }
+
+  /* Kleine Hover Animation für Footer Links */
+  footer a:hover {
+    text-shadow: 0 0 5px #00ff00;
+  }
+
+  /* Smooth scroll behavior for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
+
+<div class="gallery" aria-label="Bildgalerie mit Schwarz-Grünen Motiven">
+  <div class="gallery-item" tabindex="0">
+    <img src="https://picsum.photos/id/1018/400/250" alt="Schwarz-Grünes abstraktes Bild 1" />
+    <div class="gallery-caption">Abstrakt #1</div>
+  </div>
+  <div class="gallery-item" tabindex="0">
+    <img src="https://picsum.photos/id/1025/400/250" alt="Schwarz-Grünes abstraktes Bild 2" />
+    <div class="gallery-caption">Abstrakt #2</div>
+  </div>
+  <div class="gallery-item" tabindex="0">
+    <img src="https://picsum.photos/id/1040/400/250" alt="Schwarz-Grünes abstraktes Bild 3" />
+    <div class="gallery-caption">Abstrakt #3</div>
+  </div>
+  <div class="gallery-item" tabindex="0">
+    <img src="https://picsum.photos/id/1057/400/250" alt="Schwarz-Grünes abstraktes Bild 4" />
+    <div class="gallery-caption">Abstrakt #4</div>
+  </div>
+</div>
+
+<div id="colorWave" aria-hidden="true"></div>
+
+<footer>
+  &copy; 2025 Dein Monster Projekt — <a href="#cookieBanner" tabindex="0">Cookies & Datenschutz</a> | <a href="#countdownContainer" tabindex="0">Nach oben</a>
+</footer>
+<style>
+  /* --- Teil 4: Finale Features, Darkmode, Cookies, Drag & Drop Chat --- */
+
+  /* Darkmode Toggle Button */
+  #darkModeToggle {
+    position: fixed;
+    bottom: 4rem;
+    right: 2rem;
+    background: var(--fg);
+    color: #000;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 0 12px var(--fg);
+    transition: background-color 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+  }
+  #darkModeToggle:hover {
+    background-color: #00bb55;
+  }
+
+  /* Responsive Hamburger Menu */
+  #hamburger {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    z-index: 1200;
+  }
+  #hamburger div {
+    height: 4px;
+    background: var(--fg);
+    margin: 6px 0;
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+  #hamburger.active div:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+  #hamburger.active div:nth-child(2) {
+    opacity: 0;
+  }
+  #hamburger.active div:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+  @media (max-width: 768px) {
+    #hamburger {
+      display: block;
+    }
+    nav {
+      position: fixed;
+      top: 0; right: 0;
+      background: #000a00dd;
+      height: 100vh;
+      width: 240px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      padding-top: 4rem;
+      z-index: 1050;
+      box-shadow: -4px 0 8px #00ff0044;
+      border-left: 2px solid var(--fg);
+    }
+    nav.open {
+      transform: translateX(0);
+    }
+    nav a {
+      display: block;
+      margin: 1.5rem 2rem;
+      font-size: 1.3rem;
+      color: var(--fg);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    nav a:hover {
+      color: #00ff00cc;
+    }
+  }
+
+  /* Cookie Banner */
+  #cookieBanner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #002200ee;
+    color: #00ff00cc;
+    padding: 1rem 2rem;
+    font-size: 0.95rem;
+    text-align: center;
+    z-index: 1300;
+    display: none;
+  }
+  #cookieBanner button {
+    background: var(--fg);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #cookieBanner button:hover {
+    background-color: #00bb55;
+  }
+
+  /* Drag & Drop Chatbox */
+  .chatbot {
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    width: 320px;
+    max-height: 450px;
+    overflow: hidden;
+    resize: both;
+    border-radius: 16px;
+    box-shadow: 0 0 40px #00ff0055;
+    z-index: 1000;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    animation: fadein 0.5s ease-out;
+  }
+  .chatbot-header {
+    background: var(--fg);
+    color: #000;
+    font-weight: 700;
+    padding: 1rem;
+    cursor: move;
+    user-select: none;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chatbot-header button {
+    background: transparent;
+    border: none;
+    color: #000;
+    font-size: 1.4rem;
+    cursor: pointer;
+    font-weight: 900;
+  }
+  .chatbot-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #161616;
+  }
+  .chatbot-input {
+    display: flex;
+    border-top: 1px solid var(--fg);
+  }
+  .chatbot-input input {
+    flex: 1;
+    padding: 0.75rem;
+    background: #1b1b1b;
+    border: none;
+    border-radius: 0 0 0 16px;
+    color: var(--text);
+    font-size: 1rem;
+  }
+  .chatbot-input button {
+    padding: 0 1rem;
+    background: var(--fg);
+    border: none;
+    color: #000;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 0 0 16px 0;
+    font-size: 1.1rem;
+  }
+
+  /* Scrollbar Styling */
+  .chatbot-body::-webkit-scrollbar {
+    width: 8px;
+  }
+  .chatbot-body::-webkit-scrollbar-thumb {
+    background: var(--fg);
+    border-radius: 4px;
+  }
+  .chatbot-body::-webkit-scrollbar-track {
+    background: #000;
+  }
+</style>
+
+<!-- Responsive Navigation -->
+<div id="hamburger" aria-label="Menü öffnen" role="button" tabindex="0" aria-expanded="false" aria-controls="navMenu">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+<nav id="navMenu" aria-hidden="true">
+  <a href="#countdownContainer">Countdown</a>
+  <a href="#chatbotSection">Chatbot</a>
+  <a href="#gallerySection">Galerie</a>
+  <a href="#colorWave">Farbspiel</a>
+  <a href="#cookieBanner">Cookies</a>
+</nav>
+
+<!-- Chatbot mit Drag & Drop -->
+<section class="chatbot" id="chatbotSection" role="region" aria-label="Chatbot Gerd">
+  <div class="chatbot-header" id="chatbotHeader" tabindex="0" aria-grabbed="false">
+    Chatbot Gerd 🤖
+    <button id="closeChat" aria-label="Chat schließen">&times;</button>
+  </div>
+  <div class="chatbot-body" id="chat">
+    <!-- Chat-Inhalte -->
+  </div>
+  <form class="chatbot-input" onsubmit="return sendMessage(event)">
+    <input type="text" id="userInput" placeholder="Frag Gerd was..." aria-label="Chat Eingabe" autocomplete="off" />
+    <button type="submit" aria-label="Nachricht senden">Senden</button>
+  </form>
+</section>
+
+<!-- Cookie Banner -->
+<div id="cookieBanner" role="alert" aria-live="assertive">
+  Diese Website verwendet Cookies, um dir das beste Erlebnis zu bieten.
+  <button id="acceptCookies">Akzeptieren</button>
+</div>
+
+<script>
+  // Hamburger Menü Toggle
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('navMenu');
+  hamburger.addEventListener('click', () => {
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', !expanded);
+    navMenu.classList.toggle('open');
+    navMenu.setAttribute('aria-hidden', expanded);
+  });
+
+  // Chatbot Drag & Drop
+  const chatbot = document.querySelector('.chatbot');
+  const header = document.getElementById('chatbotHeader');
+  let offsetX, offsetY, isDragging = false;
+
+  header.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - chatbot.getBoundingClientRect().left;
+    offsetY = e.clientY - chatbot.getBoundingClientRect().top;
+    header.setAttribute('aria-grabbed', 'true');
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    header.setAttribute('aria-grabbed', 'false');
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    chatbot.style.left = (e.clientX - offsetX) + 'px';
+    chatbot.style.top = (e.clientY - offsetY) + 'px';
+  });
+
+  // Chatbot Close Button
+  document.getElementById('closeChat').addEventListener('click', () => {
+    chatbot.style.display = 'none';
+  });
+
+  // Darkmode Toggle mit localStorage
+  const darkModeToggle = document.createElement('button');
+  darkModeToggle.id = 'darkModeToggle';
+  darkModeToggle.title = 'Darkmode an/aus';
+  darkModeToggle.innerHTML = '🌓';
+  document.body.appendChild(darkModeToggle);
+
+  const root = document.documentElement;
+  const savedMode = localStorage.getItem('darkMode');
+  if (savedMode === 'on') {
+    root.style.setProperty('--bg', '#000');
+    root.style.setProperty('--fg', '#00ff00');
+    root.style.setProperty('--text', '#0f0');
+  }
+
+  darkModeToggle.addEventListener('click', () => {
+    if (root.style.getPropertyValue('--bg') === '#000') {
+      root.style.setProperty('--bg', '#0d0d0d');
+      root.style.setProperty('--fg', '#00aa00');
+      root.style.setProperty('--text', '#0f0');
+      localStorage.setItem('darkMode', 'off');
+    } else {
+      root.style.setProperty('--bg', '#000');
+      root.style.setProperty('--fg', '#00ff00');
+      root.style.setProperty('--text', '#0f0');
+      localStorage.setItem('darkMode', 'on');
+    }
+  });
+
+  // Cookie Banner Logik
+  const cookieBanner = document.getElementById('cookieBanner');
+  const acceptCookiesBtn = document.getElementById('acceptCookies');
+
+  if (!localStorage.getItem('cookiesAccepted')) {
+    cookieBanner.style.display = 'block';
+  }
+
+  acceptCookiesBtn.addEventListener('click', () => {
     localStorage.setItem('cookiesAccepted', 'true');
     cookieBanner.style.display = 'none';
-  }
-  cookieAcceptBtn.addEventListener('click', () => {
-    cookiesAccepted();
   });
-  if (localStorage.getItem('cookiesAccepted') === 'true') {
-    cookieBanner.style.display = 'none';
-  } else {
-    cookieBanner.style.display = 'flex';
+
+  // Chatbot - Beispielantworten
+  const chat = document.getElementById('chat');
+  const userInput = document.getElementById('userInput');
+
+  function sendMessage(event) {
+    event.preventDefault();
+    const text = userInput.value.trim();
+    if (!text) return false;
+
+    // User Nachricht anzeigen
+    const userMsg = document.createElement('div');
+    userMsg.textContent = text;
+    userMsg.style.color = '#0f0';
+    userMsg.style.marginBottom = '0.5rem';
+    userMsg.style.textAlign = 'right';
+    chat.appendChild(userMsg);
+
+    // Scroll zum Ende
+    chat.scrollTop = chat.scrollHeight;
+
+    userInput.value = '';
+
+    // Gerd Antwort simulieren
+    setTimeout(() => {
+      const botMsg = document.createElement('div');
+      botMsg.style.color = '#00ff00';
+      botMsg.style.marginBottom = '1rem';
+      botMsg.textContent = antworten(text);
+      chat.appendChild(botMsg);
+      chat.scrollTop = chat.scrollHeight;
+    }, 1000);
+
+    return false;
   }
 
-})();
+  function antworten(text) {
+    const low = text.toLowerCase();
+    if (low.includes('hallo')) return 'Hallo! Wie kann ich dir helfen?';
+    if (low.includes('zeit')) return `Es ist gerade ${new Date().toLocaleTimeString()}.`;
+    if (low.includes('farbe')) return 'Grün ist die beste Farbe!';
+    if (low.includes('hilfe')) return 'Frag mich einfach alles über diese Website!';
+    return 'Sorry, das verstehe ich nicht. Versuch es nochmal.';
+  }
 </script>
-
 </body>
 </html>
