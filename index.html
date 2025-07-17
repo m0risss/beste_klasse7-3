@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-  <title>Meine erste GitHub-Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hier entsteht was Großes...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #1f4037, #99f2c8);
+      font-family: 'Rubik', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fadeIn 2s ease-out;
+    }
+    p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hallo Welt!</h1>
-  <p>Willkommen auf meiner Website 🎉</p>
+  <div>
+    <h1>Hier entsteht was Großes...</h1>
+    <p>Diese Seite wird bald richtig cool – bleib dran!</p>
+  </div>
 </body>
 </html>
+
