@@ -341,3 +341,324 @@ document.addEventListener('DOMContentLoaded', function() {
     initCountdown();
     initChatbot();
 });
+// Admin Interface Functions
+let isAdminLoggedIn = false;
+let currentAdmin = null;
+
+// Admin credentials (in production, this should be handled server-side)
+const adminCredentials = {
+    'admin': 'admin123',
+    'moderator': 'mod123',
+    'superuser': 'super456'
+};
+
+function initAdminInterface() {
+    const loginBtn = document.getElementById('loginBtn');
+    const adminDropdown = document.getElementById('adminDropdown');
+    const adminMenu = document.getElementById('adminMenu');
+    const loginForm = document.getElementById('loginForm');
+    
+    // Login button click
+    loginBtn.addEventListener('click', function() {
+        document.getElementById('loginModal').style.display = 'block';
+    });
+    
+    // Admin dropdown toggle
+    adminDropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+        adminMenu.classList.toggle('active');
+        adminDropdown.classList.toggle('active');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+        adminMenu.classList.remove('active');
+        adminDropdown.classList.remove('active');
+    });
+    
+    // Login form submit
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleLogin();
+    });
+    
+    // Check if admin is already logged in (localStorage)
+    checkExistingLogin();
+}
+
+function handleLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('loginError');
+    
+    if (adminCredentials[username] && adminCredentials[username] === password) {
+        // Successful login
+        isAdminLoggedIn = true;
+        currentAdmin = username;
+        
+        // Save login state
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminUsername', username);
+        
+        // Update UI
+        updateAdminUI();
+        closeLoginModal();
+        
+        // Show success message
+        showNotification('Erfolgreich angemeldet!', 'success');
+        
+    } else {
+        // Failed login
+        errorDiv.textContent = 'Ungültige Anmeldedaten!';
+        errorDiv.style.display = 'block';
+        
+        // Clear error after 3 seconds
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 3000);
+    }
+}
+
+function checkExistingLogin() {
+    const savedLogin = localStorage.getItem('adminLoggedIn');
+    const savedUsername = localStorage.getItem('adminUsername');
+    
+    if (savedLogin === 'true' && savedUsername) {
+        isAdminLoggedIn = true;
+        currentAdmin = savedUsername;
+        updateAdminUI();
+    }
+}
+
+function updateAdminUI() {
+    const loginSection = document.getElementById('loginSection');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminUsername = document.getElementById('adminUsername');
+    const adminAvatar = document.getElementById('adminAvatar');
+    
+    if (isAdminLoggedIn) {
+        loginSection.style.display = 'none';
+        adminPanel.style.display = 'block';
+        adminUsername.textContent = currentAdmin;
+        
+        // Update avatar based on username
+        const avatarColor = getAvatarColor(currentAdmin);
+        const avatarLetter = currentAdmin.charAt(0).toUpperCase();
+        adminAvatar.src = `https://via.placeholder.com/32x32/${avatarColor}/ffffff?text=${avatarLetter}`;
+    } else {
+        loginSection.style.display = 'block';
+        adminPanel.style.display = 'none';
+    }
+}
+
+function getAvatarColor(username) {
+    const colors = ['3498db', 'e74c3c', '2ecc71', 'f39c12', '9b59b6', '1abc9c'];
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+        hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+}
+
+function logout() {
+    isAdminLoggedIn = false;
+    currentAdmin = null;
+    
+    // Clear saved login
+    localStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('adminUsername');
+    
+    // Update UI
+    updateAdminUI();
+    
+    // Close admin menu
+    document.getElementById('adminMenu').classList.remove('active');
+    document.getElementById('adminDropdown').classList.remove('active');
+    
+    showNotification('Erfolgreich abgemeldet!', 'info');
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('loginForm').reset();
+    document.getElementById('loginError').style.display = 'none';
+}
+
+// Admin Dashboard Functions
+function openAdminDashboard() {
+    if (!isAdminLoggedIn) return;
+    
+    document.getElementById('adminDashboardModal').style.display = 'block';
+    document.getElementById('adminMenu').classList.remove('active');
+    
+    // Update dashboard stats (simulate real data)
+    updateDashboardStats();
+}
+
+function closeAdminDashboard() {
+    document.getElementById('adminDashboardModal').style.display = 'none';
+}
+
+function updateDashboardStats() {
+    // Simulate dynamic stats
+    const stats = {
+        users: Math.floor(Math.random() * 2000) + 1000,
+        toolUsage: Math.floor(Math.random() * 8000) + 3000,
+        chatMessages: Math.floor(Math.random() * 5000) + 1000,
+        pageViews: Math.floor(Math.random() * 20000) + 8000
+    };
+    
+    document.querySelector('.stat-card:nth-child(1) .stat-number').textContent = stats.users.toLocaleString();
+    document.querySelector('.stat-card:nth-child(2) .stat-number').textContent = stats.toolUsage.toLocaleString();
+    document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = stats.chatMessages.toLocaleString();
+    document.querySelector('.stat-card:nth-child(4) .stat-number').textContent = stats.pageViews.toLocaleString();
+}
+
+// Admin Action Functions
+function openUserManagement() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Benutzerverwaltung wird geladen...', 'info');
+    document.getElementById('adminMenu').classList.remove('active');
+}
+
+function openSiteSettings() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Einstellungen werden geladen...', 'info');
+    document.getElementById('adminMenu').classList.remove('active');
+}
+
+function openAnalytics() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Analytics werden geladen...', 'info');
+    document.getElementById('adminMenu').classList.remove('active');
+}
+
+function openToolManagement() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Tool-Verwaltung wird geladen...', 'info');
+    document.getElementById('adminMenu').classList.remove('active');
+}
+
+function openProfile() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Profil wird geladen...', 'info');
+    document.getElementById('adminMenu').classList.remove('active');
+}
+
+function toggleMaintenance() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Wartungsmodus umgeschaltet!', 'warning');
+}
+
+function clearCache() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Cache wurde geleert!', 'success');
+}
+
+function backupData() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Backup wird erstellt...', 'info');
+}
+
+function viewLogs() {
+    if (!isAdminLoggedIn) return;
+    showNotification('Logs werden geladen...', 'info');
+}
+
+// Notification System
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Add notification styles if not already added
+    if (!document.querySelector('#notificationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'notificationStyles';
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                min-width: 250px;
+                animation: slideIn 0.3s ease;
+            }
+            
+            .notification-success { border-left: 4px solid #27ae60; }
+            .notification-error { border-left: 4px solid #e74c3c; }
+            .notification-warning { border-left: 4px solid #f39c12; }
+            .notification-info { border-left: 4px solid #3498db; }
+            
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-circle',
+        warning: 'exclamation-triangle',
+        info: 'info-circle'
+    };
+    return icons[type] || 'info-circle';
+}
+
+// Update the main DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('toolModal');
+    const closeBtn = document.querySelector('.close');
+    
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+        if (event.target === document.getElementById('loginModal')) {
+            closeLoginModal();
+        }
+        if (event.target === document.getElementById('adminDashboardModal')) {
+            closeAdminDashboard();
+        }
+    });
+    
+    // Initialize all components
+    initCountdown();
+    initChatbot();
+    initAdminInterface(); // Add this line
+});
