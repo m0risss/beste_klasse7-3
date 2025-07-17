@@ -240,7 +240,6 @@ function copyToClipboard(text) {
     });
 }
 
-// Chatbot Functions
 function initChatbot() {
     const chatToggle = document.getElementById('chatToggle');
     const chatBody = document.querySelector('.chatbot-body');
@@ -248,7 +247,10 @@ function initChatbot() {
     const chatInput = document.getElementById('chatInput');
     
     chatToggle.addEventListener('click', function() {
-        if (chatBody.style.display === 'none') {
+        // Verwende getComputedStyle() um den tatsächlichen CSS-Wert zu erhalten
+        const isHidden = window.getComputedStyle(chatBody).display === 'none';
+        
+        if (isHidden) {
             chatBody.style.display = 'flex';
             chatToggle.textContent = '−';
         } else {
@@ -264,6 +266,7 @@ function initChatbot() {
         }
     });
 }
+
 
 function sendMessage() {
     const input = document.getElementById('chatInput');
