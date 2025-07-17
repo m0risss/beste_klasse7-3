@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Tool-Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <h2>ToolHub</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#countdown">Countdown</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Willkommen bei ToolHub</h1>
+            <p>Deine zentrale Anlaufstelle für nützliche Online-Tools</p>
+            <button class="cta-button" onclick="scrollToSection('tools')">Tools entdecken</button>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section id="countdown" class="countdown-section">
+        <div class="container">
+            <h2>Website Release Countdown</h2>
+            <div class="countdown-timer">
+                <div class="time-unit">
+                    <span id="days">00</span>
+                    <label>Tage</label>
+                </div>
+                <div class="time-unit">
+                    <span id="hours">00</span>
+                    <label>Stunden</label>
+                </div>
+                <div class="time-unit">
+                    <span id="minutes">00</span>
+                    <label>Minuten</label>
+                </div>
+                <div class="time-unit">
+                    <span id="seconds">00</span>
+                    <label>Sekunden</label>
+                </div>
+            </div>
+            <p class="countdown-text">Bis zum vollständigen Launch!</p>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="tools-section">
+        <div class="container">
+            <h2>Verfügbare Tools</h2>
+            <div class="tools-grid">
+                <!-- Tool 1: Taschenrechner -->
+                <div class="tool-card">
+                    <i class="fas fa-calculator"></i>
+                    <h3>Taschenrechner</h3>
+                    <p>Einfacher Online-Rechner für deine Berechnungen</p>
+                    <button onclick="openTool('calculator')">Öffnen</button>
+                </div>
+
+                <!-- Tool 2: Text Counter -->
+                <div class="tool-card">
+                    <i class="fas fa-font"></i>
+                    <h3>Text Zähler</h3>
+                    <p>Zähle Wörter und Zeichen in deinem Text</p>
+                    <button onclick="openTool('textcounter')">Öffnen</button>
+                </div>
+
+                <!-- Tool 3: QR Code Generator -->
+                <div class="tool-card">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>QR Code Generator</h3>
+                    <p>Erstelle QR Codes für URLs oder Text</p>
+                    <button onclick="openTool('qrcode')">Öffnen</button>
+                </div>
+
+                <!-- Tool 4: Passwort Generator -->
+                <div class="tool-card">
+                    <i class="fas fa-key"></i>
+                    <h3>Passwort Generator</h3>
+                    <p>Generiere sichere Passwörter</p>
+                    <button onclick="openTool('password')">Öffnen</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Modals -->
+    <div id="toolModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <div id="toolContent"></div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div id="chatbot" class="chatbot">
+        <div class="chatbot-header">
+            <h4>Hilfe-Chat</h4>
+            <button id="chatToggle">−</button>
+        </div>
+        <div class="chatbot-body">
+            <div id="chatMessages" class="chat-messages">
+                <div class="bot-message">
+                    Hallo! Wie kann ich dir helfen?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Schreibe eine Nachricht...">
+                <button id="sendMessage">Senden</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2024 ToolHub. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
