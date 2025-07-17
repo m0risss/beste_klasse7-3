@@ -2,7 +2,7 @@ function initCountdown() {
   const savedDate = localStorage.getItem('targetDate');
 
   // Ziel-Datum festlegen: 1. August 2025, 12:00 Uhr
-  const fallbackTarget = new Date('2025-08-01T12:00:00');
+  const fallbackTarget = new Date('2025-08-11T00:00:00');
 
   let targetDate;
 
