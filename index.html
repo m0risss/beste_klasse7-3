@@ -21,7 +21,157 @@
                 <li><a href="#contact">Kontakt</a></li>
             </ul>
         </nav>
+     <!-- Admin Interface -->
+            <div class="admin-interface">
+                <div id="loginSection" class="login-section">
+                    <button id="loginBtn" class="login-btn">
+                        <i class="fas fa-user"></i> Login
+                    </button>
+                </div>
+                
+                <div id="adminPanel" class="admin-panel" style="display: none;">
+                    <div class="admin-user">
+                        <img id="adminAvatar" src="https://via.placeholder.com/32x32/3498db/ffffff?text=A" alt="Avatar" class="admin-avatar">
+                        <span id="adminUsername">Admin</span>
+                        <button id="adminDropdown" class="admin-dropdown-btn">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="adminMenu" class="admin-menu">
+                        <a href="#" onclick="openAdminDashboard()">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a href="#" onclick="openUserManagement()">
+                            <i class="fas fa-users"></i> Benutzer
+                        </a>
+                        <a href="#" onclick="openSiteSettings()">
+                            <i class="fas fa-cog"></i> Einstellungen
+                        </a>
+                        <a href="#" onclick="openAnalytics()">
+                            <i class="fas fa-chart-bar"></i> Analytics
+                        </a>
+                        <a href="#" onclick="openToolManagement()">
+                            <i class="fas fa-tools"></i> Tools verwalten
+                        </a>
+                        <hr>
+                        <a href="#" onclick="openProfile()">
+                            <i class="fas fa-user-edit"></i> Profil
+                        </a>
+                        <a href="#" onclick="logout()" class="logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </header>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-modal">
+            <span class="close" onclick="closeLoginModal()">×</span>
+            <div class="login-form">
+                <h3><i class="fas fa-lock"></i> Admin Login</h3>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Benutzername:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Passwort:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="login-submit-btn">
+                        <i class="fas fa-sign-in-alt"></i> Anmelden
+                    </button>
+                </form>
+                <div id="loginError" class="login-error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="adminDashboardModal" class="modal">
+        <div class="modal-content admin-dashboard">
+            <span class="close" onclick="closeAdminDashboard()">×</span>
+            <div class="dashboard-content">
+                <h3><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h3>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <h4>Aktive Benutzer</h4>
+                            <span class="stat-number">1,234</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-tools"></i>
+                        <div class="stat-info">
+                            <h4>Tool-Nutzungen</h4>
+                            <span class="stat-number">5,678</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-comments"></i>
+                        <div class="stat-info">
+                            <h4>Chat-Nachrichten</h4>
+                            <span class="stat-number">2,345</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-eye"></i>
+                        <div class="stat-info">
+                            <h4>Seitenaufrufe</h4>
+                            <span class="stat-number">12,456</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <h4>Schnellaktionen</h4>
+                    <div class="action-buttons">
+                        <button onclick="toggleMaintenance()" class="action-btn maintenance">
+                            <i class="fas fa-wrench"></i> Wartungsmodus
+                        </button>
+                        <button onclick="clearCache()" class="action-btn cache">
+                            <i class="fas fa-broom"></i> Cache leeren
+                        </button>
+                        <button onclick="backupData()" class="action-btn backup">
+                            <i class="fas fa-download"></i> Backup erstellen
+                        </button>
+                        <button onclick="viewLogs()" class="action-btn logs">
+                            <i class="fas fa-file-alt"></i> Logs anzeigen
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="recent-activity">
+                    <h4>Letzte Aktivitäten</h4>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Neuer Benutzer registriert</span>
+                            <small>vor 5 Minuten</small>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-calculator"></i>
+                            <span>Taschenrechner wurde 15x verwendet</span>
+                            <small>vor 12 Minuten</small>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-qrcode"></i>
+                            <span>QR-Code Generator aktiv</span>
+                            <small>vor 23 Minuten</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rest der HTML bleibt gleich... -->
 
     <!-- Hero Section -->
     <section id="home" class="hero">
