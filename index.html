@@ -7,21 +7,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
     body {
-      height: 100vh;
-      background: linear-gradient(135deg, #1f4037, #99f2c8);
       font-family: 'Rubik', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+      background: linear-gradient(135deg, #1f4037, #99f2c8);
       color: white;
-      position: relative;
-      overflow: hidden;
+      min-height: 200vh; /* Damit scrollen möglich ist */
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 20px 150px;
+      text-align: center;
     }
     h1 {
       font-size: 3rem;
@@ -37,60 +35,132 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* Baustellen-Symbol Container */
-    .construction {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 80px;
-      height: 80px;
-      cursor: default;
-      z-index: 10;
+    /* Scroll-Animation für Elemente */
+    .hidden {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Baustellen-Dreieck (Warnschild) */
-    .triangle {
-      width: 0;
-      height: 0;
-      border-left: 40px solid transparent;
-      border-right: 40px solid transparent;
-      border-bottom: 70px solid #f9a825; /* warmes gelb */
-      position: relative;
-      animation: wobble 2s infinite ease-in-out;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
-      border-radius: 8px 8px 0 0;
+    /* Math Chatbot Styles */
+    #math-chatbot {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 100px;
+      color: black;
+      background-color: #f0f0f0;
+      color: #333;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      text-align: left;
     }
-
-    /* Ausrufezeichen */
-    .triangle::before {
-      content: "!";
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: #b71c1c; /* dunkles rot */
-      text-shadow: 0 0 3px rgba(0,0,0,0.5);
+    #chat-output {
+      height: 150px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
     }
-
-    /* Wackel-Animation */
-    @keyframes wobble {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(5deg); }
-      50% { transform: rotate(0deg); }
-      75% { transform: rotate(-5deg); }
+    #chat-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    #send-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #1f4037;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #send-btn:hover {
+      background: #15512b;
     }
   </style>
 </head>
 <body>
-  <div>
+  <div class="container">
     <h1>Hier entsteht was Großes...</h1>
     <p>Diese Seite wird bald richtig cool – bleib dran!</p>
+
+    <!-- Math Solver Chatbot Bereich -->
+    <section id="math-chatbot" class="hidden">
+      <h2>Math Solver Chatbot</h2>
+      <div id="chat-output"></div>
+      <input id="chat-input" type="text" placeholder="Gib eine Mathe-Aufgabe ein, z.B. 2+2" />
+      <button id="send-btn">Berechnen</button>
+    </section>
   </div>
 
-  <div class="construction" title="Baustelle – Seite im Aufbau">
-    <div class="triangle"></div>
-  </div>
+  <script>
+    // Scroll-Animation: Elemente einblenden, wenn sichtbar
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
+    function scrollAnimation() {
+      const hiddenElements = document.querySelectorAll('.hidden');
+      hiddenElements.forEach(el => {
+        if (isInViewport(el)) {
+          el.classList.add('show');
+          el.classList.remove('hidden');
+        }
+      });
+    }
+    window.addEventListener('scroll', scrollAnimation);
+    window.addEventListener('load', scrollAnimation);
+
+    // Math Solver Chatbot (einfach)
+    const chatOutput = document.getElementById('chat-output');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function appendMessage(msg, fromUser = false) {
+      const el = document.createElement('div');
+      el.textContent = (fromUser ? 'Du: ' : 'Bot: ') + msg;
+      el.style.marginBottom = '6px';
+      chatOutput.appendChild(el);
+      chatOutput.scrollTop = chatOutput.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', () => {
+      const input = chatInput.value.trim();
+      if (!input) return;
+      appendMessage(input, true);
+
+      // Versuch, das Math-Problem zu lösen
+      try {
+        // Sicherer Eval: Nur Zahlen und +-*/(). erlauben
+        if (!/^[0-9+\-*/().\s]+$/.test(input)) throw new Error('Nur einfache Rechenzeichen erlaubt');
+        // eslint-disable-next-line no-eval
+        const result = eval(input);
+        appendMessage('Ergebnis: ' + result);
+      } catch (e) {
+        appendMessage('Fehler: ' + e.message);
+      }
+
+      chatInput.value = '';
+    });
+
+    // Enter-Taste sendet auch
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendBtn.click();
+    });
+  </script>
 </body>
 </html>
