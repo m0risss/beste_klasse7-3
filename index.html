@@ -1,566 +1,137 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meine News-Seite</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #f0f4f8;
-      --card: #ffffff;
-      --accent: #1976d2;
-      --text: #222;
-      --muted: #777;
-      --admin: #e3f2fd;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      background-color: var(--card);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      color: var(--accent);
-    }
-
-    #loginButton {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 0.5rem 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    #loginButton:hover {
-      background: #145ea8;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-
-    .news {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .news-item {
-      background: var(--card);
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      padding: 1rem 1.5rem;
-      transition: transform 0.2s;
-    }
-
-    .news-item:hover {
-      transform: scale(1.01);
-    }
-
-    .news-title {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-      color: var(--accent);
-    }
-
-    .news-date {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
-
-    .news-text {
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-
-    #backToTop {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--accent);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 50%;
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: none;
-      box-shadow: 0 0 10px #1976d288;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.3rem;
-      }
-    }
-	/* Popup */
-.popup {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.popup-content {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  text-align: center;
-}
-
-.popup-content input {
-  width: 100%;
-  padding: 0.7rem;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.popup-content button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.hidden {
-  display: none;
-}
-
-#error {
-  color: red;
-  font-size: 0.9rem;
-}
-
-#loginBtn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  z-index: 10;
-}
-
-.admin-panel {
-  background: #eef3f8;
-  padding: 1rem;
-  margin: 2rem auto;
-  max-width: 600px;
-  border-radius: 12px;
-  box-shadow: 0 0 12px #ccc;
-}
-
-.admin-panel input,
-.admin-panel textarea {
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.7rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-}
-/* Navigation */
-.nav {
-  display: flex;
-  justify-content: center;
-  background-color: #f2f5f9;
-  padding: 0.5rem 1rem;
-  gap: 1.5rem;
-  border-bottom: 2px solid #ccc;
-}
-
-.nav a {
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.nav a:hover {
-  color: #007bff;
-}
-
-/* Suchbox */
-.search-box {
-  display: block;
-  margin: 2rem auto 1rem auto;
-  padding: 0.7rem 1rem;
-  width: 80%;
-  max-width: 600px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-/* News Container */
-#newsContainer {
-  max-width: 900px;
-  margin: auto;
-  padding-bottom: 4rem;
-}
-
-/* News-Karte */
-.news-card {
-  background: white;
-  margin: 1rem 0;
-  padding: 1rem 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.news-card h3 {
-  margin-top: 0;
-}
-
-.news-card .date {
-  color: #777;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
-.news-card button {
-  background: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 5px;
-  margin-top: 0.5rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.news-card button:hover {
-  background: #c82333;
-}
-.kontakt, .socials {
-  max-width: 800px;
-  margin: 4rem auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-  text-align: center;
-}
-
-.kontakt h2, .socials h2 {
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.kontakt form input, .kontakt form textarea {
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.kontakt form button {
-  background: #007bff;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.kontakt form button:hover {
-  background: #0056b3;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.social-links a {
-  text-decoration: none;
-  background: #f2f2f2;
-  padding: 0.7rem 1.2rem;
-  border-radius: 8px;
-  color: #333;
-  transition: 0.3s;
-  font-weight: bold;
-}
-
-.social-links a:hover {
-  background: #007bff;
-  color: white;
-}
-
-.footer {
-  background: #f0f0f0;
-  text-align: center;
-  padding: 2rem 1rem;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.footer a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-#toTop {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.7rem 1rem;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: none;
-}
-
-@media (max-width: 600px) {
-  .nav { flex-direction: column; }
-  .social-links { flex-direction: column; }
-}
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Tool-Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <h2>ToolHub</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#countdown">Countdown</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <header>
-  <nav class="nav">
-  <a href="#">Start</a>
-  <a href="#newsContainer">News</a>
-  <a href="#kontakt">Kontakt</a>
-  <a href="#socials">Socials</a>
-</nav>
-<nav class="nav">
-  <a href="#">Start</a>
-  <a href="#newsContainer">News</a>
-  <a href="#kontakt">Kontakt</a>
-  <a href="#socials">Socials</a>
-</nav>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Willkommen bei ToolHub</h1>
+            <p>Deine zentrale Anlaufstelle für nützliche Online-Tools</p>
+            <button class="cta-button" onclick="scrollToSection('tools')">Tools entdecken</button>
+        </div>
+    </section>
 
-    <h1>Meine News</h1>
-    <button id="loginButton" onclick="toggleLogin()">Login</button>
-  </header>
-<input type="text" id="searchBox" placeholder="🔍 News durchsuchen..." onkeyup="filterNews()" class="search-box">
+    <!-- Countdown Section -->
+    <section id="countdown" class="countdown-section">
+        <div class="container">
+            <h2>Website Release Countdown</h2>
+            <div class="countdown-timer">
+                <div class="time-unit">
+                    <span id="days">00</span>
+                    <label>Tage</label>
+                </div>
+                <div class="time-unit">
+                    <span id="hours">00</span>
+                    <label>Stunden</label>
+                </div>
+                <div class="time-unit">
+                    <span id="minutes">00</span>
+                    <label>Minuten</label>
+                </div>
+                <div class="time-unit">
+                    <span id="seconds">00</span>
+                    <label>Sekunden</label>
+                </div>
+            </div>
+            <p class="countdown-text">Bis zum vollständigen Launch!</p>
+        </div>
+    </section>
 
-  <div class="container">
-    <div id="newsList" class="news">
-      <!-- News werden hier eingefügt -->
+    <!-- Tools Section -->
+    <section id="tools" class="tools-section">
+        <div class="container">
+            <h2>Verfügbare Tools</h2>
+            <div class="tools-grid">
+                <!-- Tool 1: Taschenrechner -->
+                <div class="tool-card">
+                    <i class="fas fa-calculator"></i>
+                    <h3>Taschenrechner</h3>
+                    <p>Einfacher Online-Rechner für deine Berechnungen</p>
+                    <button onclick="openTool('calculator')">Öffnen</button>
+                </div>
+
+                <!-- Tool 2: Text Counter -->
+                <div class="tool-card">
+                    <i class="fas fa-font"></i>
+                    <h3>Text Zähler</h3>
+                    <p>Zähle Wörter und Zeichen in deinem Text</p>
+                    <button onclick="openTool('textcounter')">Öffnen</button>
+                </div>
+
+                <!-- Tool 3: QR Code Generator -->
+                <div class="tool-card">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>QR Code Generator</h3>
+                    <p>Erstelle QR Codes für URLs oder Text</p>
+                    <button onclick="openTool('qrcode')">Öffnen</button>
+                </div>
+
+                <!-- Tool 4: Passwort Generator -->
+                <div class="tool-card">
+                    <i class="fas fa-key"></i>
+                    <h3>Passwort Generator</h3>
+                    <p>Generiere sichere Passwörter</p>
+                    <button onclick="openTool('password')">Öffnen</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Modals -->
+    <div id="toolModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <div id="toolContent"></div>
+        </div>
     </div>
-  </div>
-<section id="kontakt" class="kontakt">
-  <h2>📬 Kontaktiere mich</h2>
-  <form action="https://formspree.io/f/moqgyobg" method="POST">
-    <input type="text" name="name" placeholder="Dein Name" required>
-    <input type="email" name="email" placeholder="Deine E-Mail" required>
-    <textarea name="message" rows="5" placeholder="Deine Nachricht..." required></textarea>
-    <button type="submit">Senden</button>
-  </form>
-</section>
 
-  <div id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</div>
-<!-- Login-Popup -->
-<div id="loginPopup" class="popup hidden">
-  <div class="popup-content">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Benutzername">
-    <input type="password" id="password" placeholder="Passwort">
-    <button onclick="login()">Einloggen</button>
-    <p id="loginError" class="error"></p>
-  </div>
-</div>
-<button id="toTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆</button>
+    <!-- Chatbot -->
+    <div id="chatbot" class="chatbot">
+        <div class="chatbot-header">
+            <h4>Hilfe-Chat</h4>
+            <button id="chatToggle">−</button>
+        </div>
+        <div class="chatbot-body">
+            <div id="chatMessages" class="chat-messages">
+                <div class="bot-message">
+                    Hallo! Wie kann ich dir helfen?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Schreibe eine Nachricht...">
+                <button id="sendMessage">Senden</button>
+            </div>
+        </div>
+    </div>
 
-<!-- Admin-Bereich -->
-<div id="adminPanel" class="hidden admin-panel">
-  <h2>🛠 Neue News erstellen</h2>
-  <input type="text" id="newsTitle" placeholder="Titel">
-  <textarea id="newsContent" placeholder="Inhalt der News"></textarea>
-  <button onclick="addNews()">News posten</button>
-</div>
-<section id="socials" class="socials">
-  <h2>🌐 Social Media</h2>
-  <div class="social-links">
-    <a href="https://www.youtube.com/@Noesis1" target="_blank">YouTube</a>
-    <a href="https://www.instagram.com/" target="_blank">Instagram</a>
-    <a href="mailto:example@email.com">E-Mail</a>
-  </div>
-</section>
-<footer class="footer">
-  <p>&copy; 2025 Deine Website | <a href="#">Impressum</a> | <a href="#">Datenschutz</a></p>
-</footer>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2024 ToolHub. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
 
-<!-- Login-Button -->
-<button id="loginBtn" onclick="showLogin()">🔐 Login</button>
-<script>
-const loginForm = document.getElementById('loginForm');
-const loginError = document.getElementById('loginError');
-const adminPanel = document.getElementById('adminPanel');
-const logoutBtn = document.getElementById('logoutBtn');
-
-const newsForm = document.getElementById('newsForm');
-const newsList = document.getElementById('newsList');
-
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin01';
-function checkLogin() {
-  if (localStorage.getItem('loggedIn') === 'true') {
-    showAdminPanel();
-  } else {
-    showLoginForm();
-  }
-}
-
-function showLoginForm() {
-  loginForm.style.display = 'block';
-  adminPanel.style.display = 'none';
-}
-
-function showAdminPanel() {
-  loginForm.style.display = 'none';
-  adminPanel.style.display = 'block';
-  displayNews();
-}
-loginForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const username = loginForm.username.value;
-  const password = loginForm.password.value;
-  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    localStorage.setItem('loggedIn', 'true');
-    loginError.textContent = '';
-    loginForm.reset();
-    showAdminPanel();
-  } else {
-    loginError.textContent = 'Benutzername oder Passwort falsch.';
-  }
-});
-
-logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem('loggedIn');
-  showLoginForm();
-});
-function loadNews() {
-  const data = localStorage.getItem('newsData');
-  return data ? JSON.parse(data) : [];
-}
-
-function saveNews(newsArray) {
-  localStorage.setItem('newsData', JSON.stringify(newsArray));
-}
-function displayNews() {
-  const newsArray = loadNews();
-  newsList.innerHTML = '';
-  if (newsArray.length === 0) {
-    newsList.innerHTML = '<p>Keine News verfügbar.</p>';
-    return;
-  }
-  newsArray.forEach((news, i) => {
-    const div = document.createElement('div');
-    div.className = 'news-item';
-    div.innerHTML = `
-      <h3>${news.title}</h3>
-      <p>${news.content}</p>
-      <small>${new Date(news.date).toLocaleString()}</small>
-      <button class="edit-btn" data-index="${i}">Bearbeiten</button>
-      <button class="delete-btn" data-index="${i}">Löschen</button>
-    `;
-    newsList.appendChild(div);
-  });
-
-  // Eventlistener für Edit & Delete Buttons
-  document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.onclick = () => openEditNews(btn.dataset.index);
-  });
-  document.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.onclick = () => deleteNews(btn.dataset.index);
-  });
-}
-function openEditNews(index) {
-  const newsArray = loadNews();
-  const news = newsArray[index];
-  if (!news) return;
-  newsForm.title.value = news.title;
-  newsForm.content.value = news.content;
-  newsForm.dataset.editIndex = index;
-  newsForm.querySelector('h2').textContent = 'News bearbeiten';
-  newsForm.querySelector('button[type="submit"]').textContent = 'Speichern';
-}
-
-function deleteNews(index) {
-  const newsArray = loadNews();
-  newsArray.splice(index, 1);
-  saveNews(newsArray);
-  displayNews();
-}
-newsForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const title = newsForm.title.value.trim();
-  const content = newsForm.content.value.trim();
-  if (!title || !content) {
-    alert('Bitte Titel und Inhalt eingeben!');
-    return;
-  }
-  const newsArray = loadNews();
-  const editIndex = newsForm.dataset.editIndex;
-
-  if (editIndex === undefined) {
-    // Neue News
-    newsArray.unshift({ title, content, date: new Date().toISOString() });
-  } else {
-    // News bearbeiten
-    newsArray[editIndex] = { title, content, date: new Date().toISOString() };
-    delete newsForm.dataset.editIndex;
-  }
-
-  saveNews(newsArray);
-  newsForm.reset();
-  newsForm.querySelector('h2').textContent = 'Neue News erstellen';
-  newsForm.querySelector('button[type="submit"]').textContent = 'Hinzufügen';
-  displayNews();
-});
-checkLogin();
-</script>
-
+    <script src="script.js"></script>
+</body>
+</html>
