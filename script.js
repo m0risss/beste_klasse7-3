@@ -380,39 +380,75 @@ const adminCredentials = {
     'superuser': 'super456'
 };
 
+// ... deine anderen Funktionen (getCalculatorHTML, etc.) ...
+
+// HIER die neue Funktion einfügen:
 function initAdminInterface() {
-    const loginBtn = document.getElementById('loginBtn');
+    // Warte bis Elemente verfügbar sind
+    const waitForElements = () => {
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        
+        if (!loginBtn || !loginModal) {
+            console.log('Warte auf Elemente...');
+            setTimeout(waitForElements, 100);
+            return;
+        }
+        
+        // Login Button Event
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Login Button geklickt!');
+            loginModal.style.display = 'block';
+        });
+        
+        // Hier deine anderen Admin-Events hinzufügen:
+        setupAdminDropdown();
+        setupLoginForm();
+        checkExistingLogin();
+        
+        console.log('✅ Admin Interface initialisiert');
+    };
+    
+    waitForElements();
+}
+
+// Hilfsfunktionen für Admin Interface
+function setupAdminDropdown() {
     const adminDropdown = document.getElementById('adminDropdown');
     const adminMenu = document.getElementById('adminMenu');
-    const loginForm = document.getElementById('loginForm');
     
-    // Login button click
-    loginBtn.addEventListener('click', function() {
-        document.getElementById('loginModal').style.display = 'block';
-    });
-    
-    // Admin dropdown toggle
-    adminDropdown.addEventListener('click', function(e) {
-        e.stopPropagation();
-        adminMenu.classList.toggle('active');
-        adminDropdown.classList.toggle('active');
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function() {
-        adminMenu.classList.remove('active');
-        adminDropdown.classList.remove('active');
-    });
-    
-    // Login form submit
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        handleLogin();
-    });
-    
-    // Check if admin is already logged in (localStorage)
-    checkExistingLogin();
+    if (adminDropdown && adminMenu) {
+        adminDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+            adminMenu.classList.toggle('active');
+            adminDropdown.classList.toggle('active');
+        });
+    }
 }
+
+function setupLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleLogin();
+        });
+    }
+}
+
+// ... deine anderen bestehenden Funktionen bleiben unverändert ...
+
+// DOMContentLoaded Event (ganz am Ende)
+document.addEventListener('DOMContentLoaded', function() {
+    // ... dein bestehender Code ...
+    
+    // Initialize all components
+    initCountdown();
+    initChatbot();
+    initAdminInterface(); // Diese Zeile sollte schon da sein
+});
+
 
 function handleLogin() {
     const username = document.getElementById('username').value;
