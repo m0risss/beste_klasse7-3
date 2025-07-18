@@ -379,6 +379,7 @@ function initAdminInterface() {
         loginBtn.addEventListener('click', function(e) {
             e.preventDefault();
             console.log('Login Button geklickt!');
+            function.handlelogin() ;
             loginModal.style.display = 'block';
         });
         
