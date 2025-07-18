@@ -250,13 +250,16 @@ function initChatbot() {
         // Verwende getComputedStyle() um den tatsächlichen CSS-Wert zu erhalten
         const isHidden = window.getComputedStyle(chatBody).display === 'none';
         
-        if (isHidden) {
-            chatBody.style.display = 'flex';
-            chatToggle.textContent = '−';
-        } else {
-            chatBody.style.display = 'none';
-            chatToggle.textContent = '+';
-        }
+        chatToggle.addEventListener('click', function() {
+    chatBody.classList.toggle('hidden');
+    
+    if (chatBody.classList.contains('hidden')) {
+        chatToggle.textContent = '+';
+    } else {
+        chatToggle.textContent = '−';
+    }
+});
+
     });
     
     sendButton.addEventListener('click', sendMessage);
