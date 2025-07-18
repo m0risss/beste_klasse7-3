@@ -1,24 +1,4 @@
-// Füge das ganz oben in dein JavaScript ein, um zu testen:
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('=== DEBUGGING START ===');
-    
-    // Prüfe alle wichtigen Elemente
-    const elements = ['loginBtn', 'loginModal', 'adminDropdown', 'adminMenu'];
-    elements.forEach(id => {
-        const element = document.getElementById(id);
-        console.log(`${id}:`, element ? '✅ gefunden' : '❌ FEHLT');
-    });
-    
-    // Teste Login Button direkt
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function() {
-            alert('Login Button funktioniert!'); // Einfacher Test
-        });
-    }
-    
-    console.log('=== DEBUGGING ENDE ===');
-});
+
 
 function initCountdown() {
   const savedDate = localStorage.getItem('targetDate');
