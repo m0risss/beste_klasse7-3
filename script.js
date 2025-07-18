@@ -1,5 +1,3 @@
-
-
 function initCountdown() {
   const savedDate = localStorage.getItem('targetDate');
 
